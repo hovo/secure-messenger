@@ -30,6 +30,7 @@ feature -- Tests
 			comment("t0: create new user")
 			create user_1.make (1, "John")
 			create messenger
+			sub_comment(user_1.out)
 			messenger.add_user (user_1)
 			Result := user_1.name ~ "John" and user_1.uid = 1
 			Check Result end

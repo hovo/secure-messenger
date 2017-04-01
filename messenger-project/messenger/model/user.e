@@ -7,6 +7,12 @@ note
 class
 	USER
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 create
 	make
 
@@ -32,5 +38,15 @@ feature
 			create {ARRAYED_LIST[INTEGER_64]} registered_to.make (0)
 		end
 
+feature
+	out: STRING
+		-- print user
+		local
+			format: STRING
+		do
+			create Result.make_empty
+			format := uid.out + "->" + name
+			Result.append (format)
+		end
 
 end
