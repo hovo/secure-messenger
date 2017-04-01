@@ -8,7 +8,14 @@ class
 	MESSENGER
 
 feature
+	-- List of users
 	users: HASH_TABLE[USER, INTEGER_64]
+		once
+			create Result.make(0)
+		end
+
+	-- List of groups
+	groups: HASH_TABLE[GROUP, INTEGER_64]
 		once
 			create Result.make(0)
 		end

@@ -22,7 +22,7 @@ feature
 	-- Create a user
 		require
 			positive_uid: user_id > 0
-			valid_name: user_name.count > 0 and user_name.at (1).is_alpha
+			valid_user_name: user_name.count > 0 and user_name.at (1).is_alpha
 		do
 			uid := user_id
 			name := user_name
