@@ -19,6 +19,7 @@ feature
 			add_boolean_case (agent t0)
 			add_boolean_case (agent t1)
 			add_boolean_case (agent t2)
+			add_boolean_case (agent t3)
 		end
 
 feature -- Tests
@@ -67,6 +68,23 @@ feature -- Tests
 			Result := messenger.users.first.registered_to.count = 1
 			Check Result end
 			Result := messenger.users.first.registered_to.has (group.gid)
+		end
+
+	t3: BOOLEAN
+		local
+			user: USER
+			group: GROUP
+			message: MESSAGE
+			messenger: MESSENGER
+		do
+			comment("t3: send message")
+			create messenger
+			create user.make (1, "hovo")
+			create group.make (1, "group1")
+			create message.make (1, 1, "qwertyuiopasdfgh")
+			messenger.send_message (message)
+			sub_comment(message.out)
+			Result := true
 		end
 
 end

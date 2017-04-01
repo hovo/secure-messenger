@@ -57,6 +57,16 @@ feature -- Queries
 			registered: users.at (find_by_uid (uid)).registered_to.has (gid)
 		end
 
+	send_message (message: MESSAGE)
+		-- send message to gid
+		require
+			user_id_exists: uid_exists (message.sender)
+			group_id_exists: groups.has (message.to_group)
+			-- TODO: User not authorized to send messages to the specified group.
+		do
+			-- TODO: add message to group
+		end
+
 feature -- Helper
 	find_by_uid (uid: INTEGER_64): INTEGER
 		-- Finds the index of the user
