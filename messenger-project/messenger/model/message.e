@@ -23,7 +23,10 @@ feature
 	content: STRING
 
 	-- Default preview length
-	--preview_length: INTEGER = 15
+	preview_length: INTEGER assign set_message_preview
+		attribute
+			Result := 15
+		end
 
 feature
 	make (uid: INTEGER_64; gid: INTEGER_64; text: STRING)
@@ -41,11 +44,11 @@ feature
 			increment_mid: mid = old mid + 1
 		end
 
-	--set_message_preview (length: INTEGER)
+	set_message_preview (length: INTEGER)
 		-- Set the message preview length
-		--do
-			--preview_length := length
-		--end
+		do
+			preview_length := length
+		end
 
 feature
 	out: STRING
