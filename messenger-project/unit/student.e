@@ -18,6 +18,7 @@ feature
 		do
 			add_boolean_case (agent t0)
 			add_boolean_case (agent t1)
+			add_boolean_case (agent t2)
 		end
 
 feature -- Tests
@@ -32,7 +33,7 @@ feature -- Tests
 			messenger.add_user (user_1)
 			Result := user_1.name ~ "John" and user_1.uid = 1
 			Check Result end
-			Result := messenger.users.has (user_1.uid)
+			Result := messenger.users.has (user_1)
 		end
 
 	t1: BOOLEAN
@@ -46,6 +47,24 @@ feature -- Tests
 			messenger.add_group(group)
 			Result := messenger.groups.has (group.gid)
 
+		end
+
+	t2: BOOLEAN
+		local
+			user: USER
+			group: GROUP
+			messenger: MESSENGER
+		do
+			comment("t2: register user to group")
+			create messenger
+			create group.make (1, "new group")
+			create user.make (1, "Jackie")
+			messenger.register_user (user.uid, group.gid)
+			Result := messenger.uid_exists (user.uid)
+			Check Result end
+			Result := messenger.users.first.registered_to.count = 1
+			Check Result end
+			Result := messenger.users.first.registered_to.has (group.gid)
 		end
 
 end

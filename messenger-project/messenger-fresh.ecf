@@ -37,7 +37,9 @@
 				<exclude>/CVS$</exclude>
 				<exclude>/EIFGENs$</exclude>
 			</file_rule>
-			<cluster name="tests" location=".\tests\">
+			<cluster name="tests" location=".\tests\" recursive="true">
+				<option void_safety="all" syntax="standard">
+				</option>
 				<cluster name="unit" location=".\unit\"/>
 				<cluster name="acceptance" location=".\acceptance\"/>
 			</cluster>

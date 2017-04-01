@@ -16,7 +16,8 @@ feature -- Attributes
 		attribute
 			create Result.make_empty
 		end
-	group: LIST[INTEGER_64]
+	registered_to: LIST[INTEGER_64]
+	--test: COLLECTION_SORTER[INTEGER_64]
 
 feature
 	make (user_id: INTEGER_64; user_name: STRING)
@@ -28,7 +29,8 @@ feature
 		do
 			uid := user_id
 			name := user_name
-			create {ARRAYED_LIST[INTEGER_64]} group.make (0)
+			create {ARRAYED_LIST[INTEGER_64]} registered_to.make (0)
 		end
+
 
 end
