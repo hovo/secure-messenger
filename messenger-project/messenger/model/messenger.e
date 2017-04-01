@@ -22,7 +22,7 @@ feature
 
 feature -- Queries
 	add_user (user: USER)
-		-- Add user to users list
+	-- Add new user to users list
 	require
 		unique_user: not users.has (user.uid)
 	do
@@ -30,6 +30,16 @@ feature -- Queries
 	ensure
 		has_user: users.has (user.uid)
 
+	end
+
+	add_group (group: GROUP)
+	-- Add new group to groups list
+	require
+		unique_group: not groups.has (group.gid)
+	do
+		groups.extend (group, group.gid)
+	ensure
+		has_group: groups.has (group.gid)
 	end
 
 end
