@@ -7,22 +7,22 @@ note
 class
 	MESSENGER
 
+create
+	make
+
 feature -- Attributes
 	-- List of users
 	users: LIST[USER]
-		once
-			create {ARRAYED_LIST[USER]} Result.make (02)
-		end
 
 	-- List of groups
 	groups: HASH_TABLE[GROUP, INTEGER_64]
-		once
-			create Result.make(0)
-		end
 
-	preview_length: INTEGER assign set_preview_length
-		attribute
-			Result := 15
+
+feature
+	make
+		do
+			create {ARRAYED_LIST[USER]} users.make (0)
+			create groups.make(0)
 		end
 
 feature -- Queries
@@ -54,12 +54,12 @@ feature -- Queries
 			positive_gid: gid > 0
 			user_id_exists: uid_exists (uid)
 			gid_exists: groups.has (gid)
-			new_registration: not users.at (find_by_uid (uid)).registered_to.has (gid)
+			new_registration: not user_at_uid (uid).registered_to.has (gid)
 
 		do
-			users.at (find_by_uid (uid)).registered_to.force (gid)
+			user_at_uid (uid).registered_to.force (gid)
 		ensure
-			registered: users.at (find_by_uid (uid)).registered_to.has (gid)
+			registered: user_at_uid (uid).registered_to.has (gid)
 		end
 
 	send_message (message: MESSAGE)
@@ -67,21 +67,36 @@ feature -- Queries
 		require
 			user_id_exists: uid_exists (message.sender)
 			group_id_exists: groups.has (message.to_group)
-			user_in_group: users.at (find_by_uid (uid)).registered_to.has (gid)
+			user_in_group: user_at_uid (message.sender).registered_to.has (message.to_group)
+		local
+			user: USER
 		do
-			-- TODO: add message to group
-		end
+			 user_at_uid (message.sender).read.force (message.mid)
+			 from
+			 	users.start
+			 until
+			 	users.after
+			 loop
+			 	user := users.item
+			 	if user.registered_to.has (message.to_group) and user.uid /= message.sender then
+			 		user.unread.force (message.mid)
+			 	end
+			 	users.forth
+			 end
 
-	set_preview_length (length: INTEGER)
-		-- Set the message preview length
-		require
-			valid_length: length > 0
-		do
-			preview_length := length
+		ensure
+			in_read: user_at_uid (message.sender).read.has (message.mid)
+			--in_unread: users.at (find_by_uid (uid)).read.force (message.mid)
 		end
 
 
 feature -- Helper
+	user_at_uid (uid: INTEGER_64): USER
+		-- Get user by uid
+		do
+			Result := users.at (find_by_uid (uid))
+		end
+
 	find_by_uid (uid: INTEGER_64): INTEGER
 		-- Finds the index of the user
 		do

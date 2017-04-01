@@ -19,6 +19,7 @@ feature
 			add_boolean_case (agent t0)
 			add_boolean_case (agent t1)
 			add_boolean_case (agent t2)
+			add_boolean_case (agent t3)
 		end
 
 feature -- Tests
@@ -29,7 +30,7 @@ feature -- Tests
 		do
 			comment("t0: create new user")
 			create user_1.make (1, "John")
-			create messenger
+			create messenger.make
 			sub_comment(user_1.out)
 			messenger.add_user (user_1)
 			Result := user_1.name ~ "John" and user_1.uid = 1
@@ -45,7 +46,7 @@ feature -- Tests
 			comment("t1: create new group")
 			create group.make (1, "study group")
 			sub_comment(group.out)
-			create messenger
+			create messenger.make
 			messenger.add_group(group)
 			Result := messenger.groups.has (group.gid)
 
@@ -58,15 +59,61 @@ feature -- Tests
 			messenger: MESSENGER
 		do
 			comment("t2: register user to group")
-			create messenger
-			create group.make (1, "new group")
+			-- Create messenger
+			create messenger.make
+			-- Create user
 			create user.make (1, "Jackie")
+			-- Add user
+			messenger.add_user (user)
+			-- Create group
+			create group.make (1, "new group")
+			-- Add group
+			messenger.add_group (group)
+			-- Register user to goup
 			messenger.register_user (user.uid, group.gid)
+			-- Check result
 			Result := messenger.uid_exists (user.uid)
 			Check Result end
 			Result := messenger.users.first.registered_to.count = 1
 			Check Result end
 			Result := messenger.users.first.registered_to.has (group.gid)
+		end
+
+	t3: BOOLEAN
+		local
+			user1, user2: USER
+			messenger: MESSENGER
+			message: MESSAGE
+			group: GROUP
+		do
+			comment("t3: send message")
+			-- initialize messenger
+			create messenger.make
+			-- create users
+			create user1.make (1, "hovo")
+			create user2.make (2, "vahe")
+			-- Add users
+			messenger.add_user (user1)
+			messenger.add_user (user2)
+			-- create group
+			create group.make (1, "study group")
+			-- Add group
+			messenger.add_group (group)
+			-- register users to group
+			messenger.register_user (user1.uid, group.gid)
+			messenger.register_user (user2.uid, group.gid)
+			-- create a message
+			create message.make (user1.uid, group.gid, "hello world")
+			-- send messge to group
+			messenger.send_message (message)
+			Result := messenger.users.at (1).name ~ "hovo" and
+					  messenger.users.at (1).read.has (message.mid) and
+					  messenger.users.at (1).unread.is_empty
+			Check Result end
+			Result := messenger.users.at (2).name ~ "vahe" and
+					  messenger.users.at (2).unread.has (message.mid) and
+					  messenger.users.at (2).read.is_empty
+			Check Result end
 		end
 
 end
