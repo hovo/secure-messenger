@@ -44,6 +44,7 @@ feature -- Tests
 		do
 			comment("t1: create new group")
 			create group.make (1, "study group")
+			sub_comment(group.out)
 			create messenger
 			messenger.add_group(group)
 			Result := messenger.groups.has (group.gid)

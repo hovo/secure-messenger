@@ -44,9 +44,8 @@ feature
 		local
 			format: STRING
 		do
-			create Result.make_empty
 			format := uid.out + "->" + name
-			Result.append (format)
+			Result := format
 		end
 
 end

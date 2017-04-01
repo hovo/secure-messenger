@@ -7,6 +7,12 @@ note
 class
 	GROUP
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 create
 	make
 
@@ -24,5 +30,15 @@ feature
 		gid := group_id
 		name := group_name
 	end
+
+feature
+	out: STRING
+		-- Print group
+		local
+			format: STRING
+		do
+			format := gid.out + "->" + name
+			Result := format
+		end
 
 end
