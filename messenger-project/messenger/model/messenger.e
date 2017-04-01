@@ -67,7 +67,7 @@ feature -- Queries
 		require
 			user_id_exists: uid_exists (message.sender)
 			group_id_exists: groups.has (message.to_group)
-			-- TODO: User not authorized to send messages to the specified group.
+			user_in_group: users.at (find_by_uid (uid)).registered_to.has (gid)
 		do
 			-- TODO: add message to group
 		end
