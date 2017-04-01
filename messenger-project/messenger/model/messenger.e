@@ -7,7 +7,7 @@ note
 class
 	MESSENGER
 
-feature
+feature -- Attributes
 	-- List of users
 	users: LIST[USER]
 		once
@@ -18,6 +18,11 @@ feature
 	groups: HASH_TABLE[GROUP, INTEGER_64]
 		once
 			create Result.make(0)
+		end
+
+	preview_length: INTEGER assign set_preview_length
+		attribute
+			Result := 15
 		end
 
 feature -- Queries
@@ -66,6 +71,15 @@ feature -- Queries
 		do
 			-- TODO: add message to group
 		end
+
+	set_preview_length (length: INTEGER)
+		-- Set the message preview length
+		require
+			valid_length: length > 0
+		do
+			preview_length := length
+		end
+
 
 feature -- Helper
 	find_by_uid (uid: INTEGER_64): INTEGER
