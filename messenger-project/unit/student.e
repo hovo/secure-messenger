@@ -22,6 +22,7 @@ feature
 			add_boolean_case (agent t3)
 			add_boolean_case (agent t4)
 			add_boolean_case (agent t5)
+			add_boolean_case (agent t6)
 		end
 
 feature -- Tests
@@ -102,7 +103,7 @@ feature -- Tests
 			messenger.register_user (user1.uid, group.gid)
 			messenger.register_user (user2.uid, group.gid)
 			-- create a message
-			create message.make (user1.uid, group.gid, "hello world")
+			create message.make (messenger.message_count, user1.uid, group.gid, "hello world")
 			-- send messge to group
 			messenger.send_message (message)
 			Result := message.read_by.has (user1.uid)
@@ -132,7 +133,7 @@ feature -- Tests
 			messenger.register_user (user1.uid, group1.gid)
 			messenger.register_user (user2.uid, group2.gid)
 			-- Create message and send
-			create message.make (user1.uid, group1.gid, "hey")
+			create message.make (messenger.message_count, user1.uid, group1.gid, "hey")
 			messenger.send_message (message)
 			Result := messenger.user_at_uid (user1.uid).old_messages.has (message.mid)
 			Check Result end
@@ -158,7 +159,7 @@ feature -- Tests
 			messenger.add_group (group)
 			messenger.register_user (user1.uid, group.gid)
 			messenger.register_user (user2.uid, group.gid)
-			create message.make (user1.uid, group.gid, "hey")
+			create message.make (messenger.message_count, user1.uid, group.gid, "hey")
 			messenger.send_message (message)
 
 			Result := messenger.user_at_uid (user2.uid).new_messages.has (message.mid) and
@@ -168,8 +169,37 @@ feature -- Tests
 			Result := not messenger.user_at_uid (user2.uid).new_messages.has (message.mid) and
 					  messenger.user_at_uid (user2.uid).old_messages.has (message.mid) and
 					  message.read_by.has (user2.uid)
-
-
 		end
+
+	t6: BOOLEAN
+		local
+			messenger: MESSENGER
+			message1, message2, message3: MESSAGE
+			group: GROUP
+			user1, user2: USER
+		do
+			comment ("t5: list new message")
+			create messenger.make
+			create user1.make (1, "hovo")
+			create user2.make (2, "vahe")
+			messenger.add_user (user1)
+			messenger.add_user (user2)
+			create group.make (1, "fam")
+			messenger.add_group (group)
+			messenger.register_user (user1.uid, group.gid)
+			messenger.register_user (user2.uid, group.gid)
+			create message1.make (messenger.message_count, user1.uid, group.gid, "hey")
+			messenger.send_message (message1)
+			create message2.make (messenger.message_count, user1.uid, group.gid, "a")
+			messenger.send_message (message2)
+			create message3.make (messenger.message_count, user1.uid, group.gid, "c")
+			messenger.send_message (message3)
+			sub_comment (messenger.list_new_messages (user2.uid))
+
+			Result := messenger.user_at_uid (user2.uid).new_messages.at (1) = message1.mid and
+					  messenger.user_at_uid (user2.uid).new_messages.at (2) = message2.mid and
+					  messenger.user_at_uid (user2.uid).new_messages.at (3) = message3.mid
+		end
+
 
 end

@@ -14,6 +14,7 @@ feature -- Attributes
 	users: LIST[USER]
 	groups: LIST[GROUP]
 	messages: LIST[MESSAGE]
+	message_count: INTEGER_64
 
 feature
 	make
@@ -21,6 +22,7 @@ feature
 			create {ARRAYED_LIST[USER]} users.make (0)
 			create {ARRAYED_LIST[GROUP]} groups.make(0)
 			create {ARRAYED_LIST[MESSAGE]} messages.make (0)
+			message_count := message_count + 1
 		end
 
 feature -- Queries
@@ -71,7 +73,6 @@ feature -- Queries
 			group_users: LIST[INTEGER_64]
 			user, loop_user: USER
 		do
-			--user_at_uid (message.sender).old_messages.force (message.mid)
 			user := user_at_uid (message.sender)
 			user.old_messages.extend (message.mid)
 			user.old_messages.sort
@@ -91,6 +92,7 @@ feature -- Queries
 
 				group_users.forth
 			end
+			message_count := message_count + 1
 		ensure
 			is_read: message.read_by.has (message.sender)
 		end
@@ -139,6 +141,36 @@ feature -- Queries
 			message := i_th_message (mid)
 			sender.old_messages.search (message.mid)
 			sender.old_messages.remove
+		end
+
+feature -- print Queries
+	list_new_messages (uid: INTEGER_64):STRING
+		-- List new messages for user
+		require
+			positive_uid: uid > 0
+			user_exists: uid_exists (uid)
+		local
+			message: MESSAGE
+			new_message_list: SORTED_TWO_WAY_LIST[INTEGER_64]
+			format: STRING
+		do
+			new_message_list := user_at_uid (uid).new_messages
+			create Result.make_empty
+			from
+				new_message_list.start
+			until
+				new_message_list.after
+			loop
+				message := i_th_message (new_message_list.item)
+				format := message.mid.out + "->[sender: " + message.sender.out +
+						  ", group: " + message.to_group.out + ", content: " + message.content + "]"
+
+				Result.append (format)
+				if not new_message_list.islast then
+					Result.append ("%N")
+				end
+				new_message_list.forth
+			end
 		end
 
 feature -- Helper Queries
