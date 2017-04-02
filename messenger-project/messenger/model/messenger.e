@@ -69,8 +69,12 @@ feature -- Queries
 			user_in_group: user_at_uid (message.sender).registered_to.has (message.to_group)
 		local
 			group_users: LIST[INTEGER_64]
+			user, loop_user: USER
 		do
-			user_at_uid (message.sender).old_messages.force (message.mid)
+			--user_at_uid (message.sender).old_messages.force (message.mid)
+			user := user_at_uid (message.sender)
+			user.old_messages.extend (message.mid)
+			user.old_messages.sort
 			message.read_by.force (message.sender)
 			messages.force (message)
 
@@ -81,7 +85,10 @@ feature -- Queries
 			until
 				group_users.after
 			loop
-				user_at_uid (group_users.item).new_messages.force (message.mid)
+				loop_user := user_at_uid (group_users.item)
+				loop_user.new_messages.extend (message.mid)
+				loop_user.new_messages.sort
+
 				group_users.forth
 			end
 		ensure
@@ -109,7 +116,8 @@ feature -- Queries
     		user.new_messages.search (mid)
     		user.new_messages.remove
     		-- Add to old_messages list
-    		user.old_messages.force (mid)
+    		user.old_messages.extend (mid)
+    		user.old_messages.sort
     		-- Add to read_by list of message
 			message.read_by.force (uid)
 
