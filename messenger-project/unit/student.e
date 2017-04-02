@@ -103,7 +103,7 @@ feature -- Tests
 			create message.make (user1.uid, group.gid, "hello world")
 			-- send messge to group
 			messenger.send_message (message)
-			Result := false
+			Result := message.read_by.has (user1.uid)
 		end
 
 end

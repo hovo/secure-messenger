@@ -55,7 +55,6 @@ feature -- Queries
 			new_registration: not user_at_uid (uid).registered_to.has (gid)
 
 		do
-			-- Add user to group list
 			i_th_group (gid).users.force (uid)
 			user_at_uid (uid).registered_to.force (gid)
 		ensure
@@ -66,12 +65,13 @@ feature -- Queries
 		-- send message to gid
 		require
 			user_id_exists: uid_exists (message.sender)
-			--group_id_exists: groups.has (message.to_group)
-			--user_in_group: user_at_uid (message.sender).registered_to.has (message.to_group)
+			group_id_exists: gid_exists (message.to_group)
+			user_in_group: user_at_uid (message.sender).registered_to.has (message.to_group)
 		do
 			message.read_by.force (message.sender)
 
 		ensure
+			is_read: message.read_by.has (message.sender)
 			--in_read: user_at_uid (message.sender).read.has (message.mid)
 			--in_old_messages: user_at_uid (message.sender).old_messages.has (message.mid)
 			-- TODO: in new_messages of receiver
