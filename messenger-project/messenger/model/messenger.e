@@ -173,6 +173,35 @@ feature -- print Queries
 			end
 		end
 
+	list_old_messages (uid: INTEGER_64):STRING
+		-- List new messages for user
+		require
+			positive_uid: uid > 0
+			user_exists: uid_exists (uid)
+		local
+			message: MESSAGE
+			old_message_list: SORTED_TWO_WAY_LIST[INTEGER_64]
+			format: STRING
+		do
+			old_message_list := user_at_uid (uid).old_messages
+			create Result.make_empty
+			from
+				old_message_list.start
+			until
+				old_message_list.after
+			loop
+				message := i_th_message (old_message_list.item)
+				format := message.mid.out + "->[sender: " + message.sender.out +
+						  ", group: " + message.to_group.out + ", content: " + message.content + "]"
+
+				Result.append (format)
+				if not old_message_list.islast then
+					Result.append ("%N")
+				end
+				old_message_list.forth
+			end
+		end
+
 feature -- Helper Queries
 	mid_exists (mid: INTEGER_64): BOOLEAN
 		-- Returns true of mid exists
