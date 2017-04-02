@@ -95,13 +95,11 @@ feature -- Queries
 			positive_mid: mid > 0
 			user_exists: uid_exists (uid)
 			message_exists: mid_exists (mid)
-			-- TODO: new/old
+			new_old_exists: user_at_uid (uid).new_messages.has (mid) or user_at_uid (uid).old_messages.has (mid)
 		local
 			sender: USER
 			message: MESSAGE
 		do
-			-- Remove from senders old list
-
 			sender := user_at_uid (uid)
 			message := i_th_message (mid)
 			sender.old_messages.search (message.mid)
