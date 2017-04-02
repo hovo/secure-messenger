@@ -25,6 +25,7 @@ feature
 			add_boolean_case (agent t6)
 			add_boolean_case (agent t7)
 			add_boolean_case (agent t8)
+			add_boolean_case (agent t9)
 		end
 
 feature -- Tests
@@ -243,6 +244,25 @@ feature -- Tests
 			Check Result end
 			messenger.set_message_preview (10)
 			Result := messenger.message_preview_length = 10
+		end
+
+	t9: BOOLEAN
+		local
+			messenger: MESSENGER
+			group1, group2, group3, group4: GROUP
+		do
+			create messenger.make
+			create group1.make (5, "z")
+			messenger.add_group (group1)
+			create group2.make (6, "abc")
+			messenger.add_group (group2)
+			create group3.make (2, "abc")
+			messenger.add_group (group3)
+			create group4.make (1, "a")
+			messenger.add_group (group4)
+
+			sub_comment (messenger.list_groups)
+			Result := true
 		end
 
 

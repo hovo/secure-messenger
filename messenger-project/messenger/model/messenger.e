@@ -12,7 +12,7 @@ create
 
 feature -- Attributes
 	users: LIST[USER]
-	groups: LIST[GROUP]
+	groups: SORTED_TWO_WAY_LIST[GROUP]
 	messages: LIST[MESSAGE]
 	message_count: INTEGER_64
 	message_preview_length: INTEGER
@@ -21,7 +21,7 @@ feature
 	make
 		do
 			create {ARRAYED_LIST[USER]} users.make (0)
-			create {ARRAYED_LIST[GROUP]} groups.make(0)
+			create groups.make
 			create {ARRAYED_LIST[MESSAGE]} messages.make (0)
 			message_count := message_count + 1
 			message_preview_length := 15
@@ -44,7 +44,8 @@ feature -- Queries
 		require
 			unique_group: not gid_exists (group.gid)
 		do
-			groups.force (group)
+			groups.extend (group)
+			groups.sort
 		ensure
 			has_group: gid_exists (group.gid)
 		end
@@ -229,11 +230,27 @@ feature -- print Queries
 			end
 		end
 
-	list_groups
+	list_groups: STRING
 		-- list all groups in alphabetical order
+		local
+			format: STRING
 		do
-
+			create Result.make_empty
+			from
+				groups.start
+			until
+				groups.after
+			loop
+				format := groups.item.gid.out + "->" + groups.item.name
+				Result.append (format)
+				if not groups.islast then
+					Result.append ("%N")
+				end
+				groups.forth
+			end
 		end
+
+
 
 feature -- Helper Queries
 	mid_exists (mid: INTEGER_64): BOOLEAN
