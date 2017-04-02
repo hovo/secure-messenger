@@ -163,6 +163,7 @@ feature -- print Queries
 			message: MESSAGE
 			new_message_list: SORTED_TWO_WAY_LIST[INTEGER_64]
 			format: STRING
+			preview_text: STRING
 		do
 			new_message_list := user_at_uid (uid).new_messages
 			create Result.make_empty
@@ -172,8 +173,15 @@ feature -- print Queries
 				new_message_list.after
 			loop
 				message := i_th_message (new_message_list.item)
+
+				if message.content.count > message_preview_length then
+					preview_text := message.content.substring (1, message_preview_length) + "..."
+				else
+					preview_text := message.content
+				end
+
 				format := message.mid.out + "->[sender: " + message.sender.out +
-						  ", group: " + message.to_group.out + ", content: " + message.content + "]"
+						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
 
 				Result.append (format)
 				if not new_message_list.islast then
@@ -192,6 +200,7 @@ feature -- print Queries
 			message: MESSAGE
 			old_message_list: SORTED_TWO_WAY_LIST[INTEGER_64]
 			format: STRING
+			preview_text: STRING
 		do
 			old_message_list := user_at_uid (uid).old_messages
 			create Result.make_empty
@@ -201,8 +210,15 @@ feature -- print Queries
 				old_message_list.after
 			loop
 				message := i_th_message (old_message_list.item)
+
+				if message.content.count > message_preview_length then
+					preview_text := message.content.substring (1, message_preview_length) + "..."
+				else
+					preview_text := message.content
+				end
+
 				format := message.mid.out + "->[sender: " + message.sender.out +
-						  ", group: " + message.to_group.out + ", content: " + message.content + "]"
+						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
 
 				Result.append (format)
 				if not old_message_list.islast then
