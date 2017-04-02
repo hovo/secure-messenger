@@ -20,6 +20,7 @@ feature
 			add_boolean_case (agent t1)
 			add_boolean_case (agent t2)
 			add_boolean_case (agent t3)
+			add_boolean_case (agent t4)
 		end
 
 feature -- Tests
@@ -104,6 +105,39 @@ feature -- Tests
 			-- send messge to group
 			messenger.send_message (message)
 			Result := message.read_by.has (user1.uid)
+		end
+
+	t4: BOOLEAN
+		local
+			messenger: MESSENGER
+			group1, group2: GROUP
+			message: MESSAGE
+			user1, user2: USER
+		do
+			comment ("t4: test delete message")
+			-- create messenger
+			create messenger.make
+			-- Create groups & add
+			create group1.make (1, "g1")
+			create group2.make (2, "g2")
+			messenger.add_group (group1)
+			messenger.add_group (group2)
+			-- Create users & add
+			create user1.make (1, "hovo")
+			create user2.make (2, "vahe")
+			messenger.add_user (user1)
+			messenger.add_user (user2)
+			-- Register users to group
+			messenger.register_user (user1.uid, group1.gid)
+			messenger.register_user (user2.uid, group2.gid)
+			-- Create message and send
+			create message.make (user1.uid, group1.gid, "hey")
+			messenger.send_message (message)
+			Result := messenger.user_at_uid (user1.uid).old_messages.has (message.mid)
+			Check Result end
+			-- Delete message
+			messenger.delete_message (user1.uid, message.mid)
+			Result := not messenger.user_at_uid (user1.uid).old_messages.has (message.mid)
 		end
 
 end
