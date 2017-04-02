@@ -8,7 +8,19 @@ class
 	GROUP
 
 inherit
+	COMPARABLE
+		undefine
+			out
+		redefine
+			is_equal,
+			is_greater,
+			is_greater_equal,
+			is_less,
+			is_less_equal
+		end
 	ANY
+		undefine
+			is_equal
 		redefine
 			out
 		end
@@ -41,6 +53,40 @@ feature
 		do
 			format := gid.out + "->" + name
 			Result := format
+		end
+
+feature -- Redefined COMPARABLE routines
+	is_equal (other: like Current): BOOLEAN
+		do
+			Result:= Current.name.is_equal (other.name) and Current.gid.is_equal (other.gid)
+		end
+
+	is_greater alias ">" (other: like Current): BOOLEAN
+		do
+			if not Current.name.is_equal (other.name) then
+				Result := Current.name.is_greater (other.name)
+			else
+				Result := Current.gid.is_greater (other.gid)
+			end
+		end
+
+	is_greater_equal alias ">=" (other: like Current): BOOLEAN
+		do
+			Result := Current.is_equal (other) or Current.is_greater (other)
+		end
+
+	is_less alias "<" (other: like Current): BOOLEAN
+		do
+			if not Current.name.is_equal (other.name) then
+				Result := Current.name.is_less (other.name)
+			else
+				Result := Current.gid.is_less (other.gid)
+			end
+		end
+
+	is_less_equal alias "<=" (other: like Current): BOOLEAN
+		do
+			Result := Current.is_equal (other) or Current.is_less (other)
 		end
 
 end

@@ -153,9 +153,10 @@ feature -- Queries
 			message_preview_length := length
 		end
 
+
 feature -- print Queries
 	list_new_messages (uid: INTEGER_64):STRING
-		-- List new messages for user
+		-- list user's new messages
 		require
 			positive_uid: uid > 0
 			user_exists: uid_exists (uid)
@@ -192,7 +193,7 @@ feature -- print Queries
 		end
 
 	list_old_messages (uid: INTEGER_64):STRING
-		-- List new messages for user
+		-- list user's old/read message
 		require
 			positive_uid: uid > 0
 			user_exists: uid_exists (uid)
@@ -226,6 +227,12 @@ feature -- print Queries
 				end
 				old_message_list.forth
 			end
+		end
+
+	list_groups
+		-- list all groups in alphabetical order
+		do
+
 		end
 
 feature -- Helper Queries
