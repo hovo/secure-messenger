@@ -26,6 +26,7 @@ feature
 			add_boolean_case (agent t7)
 			add_boolean_case (agent t8)
 			add_boolean_case (agent t9)
+			add_boolean_case (agent t10)
 		end
 
 feature -- Tests
@@ -262,6 +263,26 @@ feature -- Tests
 			messenger.add_group (group4)
 
 			sub_comment (messenger.list_groups)
+			Result := true
+		end
+
+	t10: BOOLEAN
+		local
+			messenger: MESSENGER
+			user1, user2, user3, user4: USER
+		do
+			comment ("t10: list users")
+			create messenger.make
+			create user1.make (12, "abc")
+			messenger.add_user (user1)
+			create user2.make (2, "a")
+			messenger.add_user (user2)
+			create user3.make (1, "a")
+			messenger.add_user (user3)
+			create user4.make (10, "abcd")
+			messenger.add_user (user4)
+
+			sub_comment(messenger.list_users)
 			Result := true
 		end
 

@@ -11,7 +11,7 @@ create
 	make
 
 feature -- Attributes
-	users: LIST[USER]
+	users: SORTED_TWO_WAY_LIST[USER]
 	groups: SORTED_TWO_WAY_LIST[GROUP]
 	messages: LIST[MESSAGE]
 	message_count: INTEGER_64
@@ -20,7 +20,7 @@ feature -- Attributes
 feature
 	make
 		do
-			create {ARRAYED_LIST[USER]} users.make (0)
+			create users.make
 			create groups.make
 			create {ARRAYED_LIST[MESSAGE]} messages.make (0)
 			message_count := message_count + 1
@@ -33,7 +33,8 @@ feature -- Queries
 		require
 			unique_user: not uid_exists (user.uid)
 		do
-			users.force (user)
+			users.extend (user)
+			users.sort
 		ensure
 			has_user: uid_exists (user.uid)
 
@@ -250,7 +251,25 @@ feature -- print Queries
 			end
 		end
 
-
+	list_users: STRING
+		-- list all users in alphabetical order
+		local
+			format: STRING
+		do
+			create Result.make_empty
+			from
+				users.start
+			until
+				users.after
+			loop
+				format := users.item.uid.out + "->" + users.item.name
+				Result.append (format)
+				if not users.islast then
+					Result.append ("%N")
+				end
+				users.forth
+			end
+		end
 
 feature -- Helper Queries
 	mid_exists (mid: INTEGER_64): BOOLEAN
