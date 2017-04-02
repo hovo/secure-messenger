@@ -13,16 +13,14 @@ create
 feature -- Attributes
 	-- List of users
 	users: LIST[USER]
-
 	-- List of groups
-	groups: HASH_TABLE[GROUP, INTEGER_64]
-
+	groups: LIST[GROUP]
 
 feature
 	make
 		do
 			create {ARRAYED_LIST[USER]} users.make (0)
-			create groups.make(0)
+			create {ARRAYED_LIST[GROUP]} groups.make(0)
 		end
 
 feature -- Queries
@@ -40,11 +38,11 @@ feature -- Queries
 	add_group (group: GROUP)
 		-- Add new group to groups list
 		require
-			unique_group: not groups.has (group.gid)
+			unique_group: not gid_exists (group.gid)
 		do
-			groups.extend (group, group.gid)
+			groups.force (group)
 		ensure
-			has_group: groups.has (group.gid)
+			has_group: gid_exists (group.gid)
 		end
 
 	register_user (uid: INTEGER_64; gid: INTEGER_64)
@@ -53,10 +51,12 @@ feature -- Queries
 			positive_uid: uid > 0
 			positive_gid: gid > 0
 			user_id_exists: uid_exists (uid)
-			gid_exists: groups.has (gid)
+			gid_exists: gid_exists (gid)
 			new_registration: not user_at_uid (uid).registered_to.has (gid)
 
 		do
+			-- Add user to group list
+			i_th_group (gid).users.force (uid)
 			user_at_uid (uid).registered_to.force (gid)
 		ensure
 			registered: user_at_uid (uid).registered_to.has (gid)
@@ -66,31 +66,45 @@ feature -- Queries
 		-- send message to gid
 		require
 			user_id_exists: uid_exists (message.sender)
-			group_id_exists: groups.has (message.to_group)
-			user_in_group: user_at_uid (message.sender).registered_to.has (message.to_group)
-		local
-			user: USER
+			--group_id_exists: groups.has (message.to_group)
+			--user_in_group: user_at_uid (message.sender).registered_to.has (message.to_group)
 		do
-			 user_at_uid (message.sender).read.force (message.mid)
-			 from
-			 	users.start
-			 until
-			 	users.after
-			 loop
-			 	user := users.item
-			 	if user.registered_to.has (message.to_group) and user.uid /= message.sender then
-			 		user.unread.force (message.mid)
-			 	end
-			 	users.forth
-			 end
+			message.read_by.force (message.sender)
 
 		ensure
-			in_read: user_at_uid (message.sender).read.has (message.mid)
-			--in_unread: users.at (find_by_uid (uid)).read.force (message.mid)
+			--in_read: user_at_uid (message.sender).read.has (message.mid)
+			--in_old_messages: user_at_uid (message.sender).old_messages.has (message.mid)
+			-- TODO: in new_messages of receiver
+			-- TODO: in unread_messages of receiver
 		end
 
+feature -- Helper Queries
+	gid_exists (gid: INTEGER_64): BOOLEAN
+		-- Returns true if gid exists
+		do
+			across groups as c loop
+				if c.item.gid = gid then
+					Result := true
+				end
+			end
+		end
 
-feature -- Helper
+	index_of_gid (gid: INTEGER_64): INTEGER
+		-- Returns the index of gid
+		do
+			across groups as c loop
+				if c.item.gid = gid then
+					Result := c.cursor_index
+				end
+			end
+		end
+
+	i_th_group (gid: INTEGER_64): GROUP
+		-- Get the ith group
+		do
+			Result := groups.at (index_of_gid (gid))
+		end
+
 	user_at_uid (uid: INTEGER_64): USER
 		-- Get user by uid
 		do

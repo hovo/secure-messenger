@@ -48,8 +48,7 @@ feature -- Tests
 			sub_comment(group.out)
 			create messenger.make
 			messenger.add_group(group)
-			Result := messenger.groups.has (group.gid)
-
+			Result := messenger.gid_exists (group.gid)
 		end
 
 	t2: BOOLEAN
@@ -74,9 +73,7 @@ feature -- Tests
 			-- Check result
 			Result := messenger.uid_exists (user.uid)
 			Check Result end
-			Result := messenger.users.first.registered_to.count = 1
-			Check Result end
-			Result := messenger.users.first.registered_to.has (group.gid)
+			Result := group.users.has (user.uid)
 		end
 
 	t3: BOOLEAN
@@ -106,14 +103,7 @@ feature -- Tests
 			create message.make (user1.uid, group.gid, "hello world")
 			-- send messge to group
 			messenger.send_message (message)
-			Result := messenger.users.at (1).name ~ "hovo" and
-					  messenger.users.at (1).read.has (message.mid) and
-					  messenger.users.at (1).unread.is_empty
-			Check Result end
-			Result := messenger.users.at (2).name ~ "vahe" and
-					  messenger.users.at (2).unread.has (message.mid) and
-					  messenger.users.at (2).read.is_empty
-			Check Result end
+			Result := false
 		end
 
 end

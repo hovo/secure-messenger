@@ -23,8 +23,8 @@ feature -- Attributes
 			create Result.make_empty
 		end
 	registered_to: LIST[INTEGER_64]
-	read: LIST[INTEGER_64]
-	unread: LIST[INTEGER_64]
+	new_messages: LIST[INTEGER_64]
+	old_messages: LIST[INTEGER_64]
 
 feature
 	make (user_id: INTEGER_64; user_name: STRING)
@@ -37,8 +37,8 @@ feature
 			uid := user_id
 			name := user_name
 			create {ARRAYED_LIST[INTEGER_64]} registered_to.make (0)
-			create {ARRAYED_LIST[INTEGER_64]} read.make (0)
-			create {ARRAYED_LIST[INTEGER_64]} unread.make (0)
+			create {ARRAYED_LIST[INTEGER_64]} new_messages.make (0)
+			create {ARRAYED_LIST[INTEGER_64]} old_messages.make (0)
 		end
 
 feature

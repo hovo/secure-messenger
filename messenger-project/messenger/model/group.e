@@ -19,6 +19,7 @@ create
 feature -- attributes
 	gid: INTEGER_64
 	name: STRING
+	users: LIST[INTEGER_64]
 
 feature
 	make (group_id: INTEGER_64; group_name: STRING)
@@ -29,6 +30,7 @@ feature
 	do
 		gid := group_id
 		name := group_name
+		create {ARRAYED_LIST[INTEGER_64]} users.make (0)
 	end
 
 feature

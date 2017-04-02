@@ -15,6 +15,7 @@ feature
 	sender: INTEGER_64
 	to_group: INTEGER_64
 	content: STRING
+	read_by: LIST[INTEGER_64]
 
 feature
 	make (uid: INTEGER_64; gid: INTEGER_64; text: STRING)
@@ -28,6 +29,7 @@ feature
 			sender := uid
 			to_group := gid
 			content := text
+			create {ARRAYED_LIST[INTEGER_64]} read_by.make (0)
 		ensure
 			increment_mid: mid = old mid + 1
 		end
