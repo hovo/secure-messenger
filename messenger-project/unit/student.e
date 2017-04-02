@@ -21,6 +21,7 @@ feature
 			add_boolean_case (agent t2)
 			add_boolean_case (agent t3)
 			add_boolean_case (agent t4)
+			add_boolean_case (agent t5)
 		end
 
 feature -- Tests
@@ -138,6 +139,37 @@ feature -- Tests
 			-- Delete message
 			messenger.delete_message (user1.uid, message.mid)
 			Result := not messenger.user_at_uid (user1.uid).old_messages.has (message.mid)
+		end
+
+	t5: BOOLEAN
+		local
+			messenger: MESSENGER
+			message: MESSAGE
+			group: GROUP
+			user1, user2: USER
+		do
+			comment ("t5: read message")
+			create messenger.make
+			create user1.make (1, "hovo")
+			create user2.make (2, "vahe")
+			messenger.add_user (user1)
+			messenger.add_user (user2)
+			create group.make (1, "fam")
+			messenger.add_group (group)
+			messenger.register_user (user1.uid, group.gid)
+			messenger.register_user (user2.uid, group.gid)
+			create message.make (user1.uid, group.gid, "hey")
+			messenger.send_message (message)
+
+			Result := messenger.user_at_uid (user2.uid).new_messages.has (message.mid) and
+					  message.read_by.has (user1.uid) and not message.read_by.has (user2.uid)
+			Check Result end
+			messenger.read_message (user2.uid, message.mid)
+			Result := not messenger.user_at_uid (user2.uid).new_messages.has (message.mid) and
+					  messenger.user_at_uid (user2.uid).old_messages.has (message.mid) and
+					  message.read_by.has (user2.uid)
+
+
 		end
 
 end

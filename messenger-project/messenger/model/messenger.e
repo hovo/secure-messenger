@@ -88,6 +88,33 @@ feature -- Queries
 			is_read: message.read_by.has (message.sender)
 		end
 
+	read_message (uid: INTEGER_64; mid: INTEGER_64)
+		-- Mark message as read
+		require
+			positive_uid: uid > 0
+			positive_mid: mid > 0
+			user_exists: uid_exists (uid)
+			message_exists: mid_exists (mid)
+			not_authorized: i_th_group (i_th_message (mid).to_group).users.has (uid)
+			message_unavailable: user_at_uid (uid).new_messages.has (mid)
+			already_read: not user_at_uid (uid).old_messages.has (mid)
+		local
+			user: USER
+			message: MESSAGE
+    	do
+    		-- Get the message
+    		message := i_th_message(mid)
+    		-- Remove from new_messages list
+    		user := user_at_uid (uid)
+    		user.new_messages.search (mid)
+    		user.new_messages.remove
+    		-- Add to old_messages list
+    		user.old_messages.force (mid)
+    		-- Add to read_by list of message
+			message.read_by.force (uid)
+
+    	end
+
 	delete_message (uid: INTEGER_64; mid: INTEGER_64)
 		-- delete message from list
 		require
@@ -105,7 +132,6 @@ feature -- Queries
 			sender.old_messages.search (message.mid)
 			sender.old_messages.remove
 		end
-
 
 feature -- Helper Queries
 	mid_exists (mid: INTEGER_64): BOOLEAN
