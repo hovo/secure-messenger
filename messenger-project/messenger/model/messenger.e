@@ -15,6 +15,7 @@ feature -- Attributes
 	groups: LIST[GROUP]
 	messages: LIST[MESSAGE]
 	message_count: INTEGER_64
+	message_preview_length: INTEGER
 
 feature
 	make
@@ -23,6 +24,7 @@ feature
 			create {ARRAYED_LIST[GROUP]} groups.make(0)
 			create {ARRAYED_LIST[MESSAGE]} messages.make (0)
 			message_count := message_count + 1
+			message_preview_length := 15
 		end
 
 feature -- Queries
@@ -141,6 +143,14 @@ feature -- Queries
 			message := i_th_message (mid)
 			sender.old_messages.search (message.mid)
 			sender.old_messages.remove
+		end
+
+	set_message_preview (length: INTEGER)
+		-- updates the message preview length
+		require
+			valid_length: length > 0
+		do
+			message_preview_length := length
 		end
 
 feature -- print Queries

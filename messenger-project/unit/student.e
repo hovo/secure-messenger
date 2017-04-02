@@ -24,6 +24,7 @@ feature
 			add_boolean_case (agent t5)
 			add_boolean_case (agent t6)
 			add_boolean_case (agent t7)
+			add_boolean_case (agent t8)
 		end
 
 feature -- Tests
@@ -230,6 +231,18 @@ feature -- Tests
 			Result := messenger.user_at_uid (user1.uid).old_messages.at (1) = message1.mid and
 					  messenger.user_at_uid (user1.uid).old_messages.at (2) = message2.mid and
 					  messenger.user_at_uid (user1.uid).old_messages.at (3) = message3.mid
+		end
+
+	t8: BOOLEAN
+		local
+			messenger: MESSENGER
+		do
+			comment ("t8: update message preview length")
+			create messenger.make
+			Result := messenger.message_preview_length = 15
+			Check Result end
+			messenger.set_message_preview (10)
+			Result := messenger.message_preview_length = 10
 		end
 
 
