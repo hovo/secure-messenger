@@ -21,12 +21,26 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create s.make_empty
+			create messenger.make
 			i := 0
 		end
 
 feature -- model attributes
-	s : STRING
-	i : INTEGER
+	s: STRING
+	i: INTEGER
+	messenger: MESSENGER
+
+feature {ETF_COMMAND} -- ERROR MESSAGES
+	report: STRING
+		attribute
+			create Result.make_empty
+		end
+
+feature -- Set report
+	set_report (new_report: STRING)
+		do
+			report := new_report
+		end
 
 feature -- model operations
 	default_update
