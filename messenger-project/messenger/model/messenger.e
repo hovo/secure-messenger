@@ -339,6 +339,36 @@ feature -- print Queries
 			end
 		end
 
+	message_states: STRING
+		-- Print state of messages
+		local
+			format: STRING
+		do
+			create Result.make_empty
+			create format.make_empty
+
+			from
+				messages.start
+			until
+				messages.after
+			loop
+				from
+					users.start
+				until
+					users.after
+				loop
+					format := "(" + users.item.uid.out + ", " + messages.item.mid.out + ")"
+					if not users.islast then
+						Result.append ("%N")
+					end
+					Result.append(format)
+					users.forth
+				end
+				
+				messages.forth
+			end
+		end
+
 feature -- Helper Queries
 	mid_exists (mid: INTEGER_64): BOOLEAN
 		-- Returns true of mid exists

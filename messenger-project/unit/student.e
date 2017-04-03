@@ -29,6 +29,7 @@ feature
 			add_boolean_case (agent t10)
 			add_boolean_case (agent t11)
 			add_boolean_case (agent t12)
+			add_boolean_case (agent t13)
 		end
 
 feature -- Tests
@@ -343,6 +344,32 @@ feature -- Tests
 
 			sub_comment (messenger.list_registrations)
 			Result := messenger.user_at_uid (u2.uid).registered_to.count = 3 and messenger.user_at_uid (u1.uid).registered_to.count = 1
+		end
+
+	t13: BOOLEAN
+		local
+			messenger: MESSENGER
+			g1: GROUP
+			u1, u2: USER
+			m1, m2, m3: MESSAGE
+		do
+			comment ("t13: print message state")
+			create messenger.make
+			create u1.make (1, "hovo")
+			messenger.add_user (u1)
+			create u2.make (2, "vahe")
+			messenger.add_user (u2)
+			create g1.make (1, "fam")
+			messenger.add_group (g1)
+			messenger.register_user (u1.uid, g1.gid)
+			create m1.make (messenger.message_count, u1.uid, g1.gid, "hey")
+			messenger.send_message (m1)
+			create m2.make (messenger.message_count, u1.uid, g1.gid, "test")
+			messenger.send_message (m2)
+			create m3.make (messenger.message_count, u1.uid, g1.gid, "lala")
+			messenger.send_message (m3)
+
+			sub_comment (messenger.message_states)
 		end
 
 
