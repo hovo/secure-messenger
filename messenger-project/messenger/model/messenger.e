@@ -302,6 +302,43 @@ feature -- print Queries
 			end
 		end
 
+	list_registrations: STRING
+		-- List all registrations
+		local
+			format: STRING
+			groups_format: STRING
+		do
+			create Result.make_empty
+			create groups_format.make_empty
+
+			from
+				users.start
+			until
+				users.after
+			loop
+				format := "[" + users.item.uid.out + ", " + users.item.name + "]->{"
+				from
+					users.item.registered_to.start
+				until
+					users.item.registered_to.after
+				loop
+					groups_format := i_th_group (users.item.registered_to.item).gid.out + "->" + i_th_group (users.item.registered_to.item).name
+					if not users.item.registered_to.islast then
+						groups_format.append (", ")
+					end
+					format.append (groups_format)
+					users.item.registered_to.forth
+				end
+				format.append ("}")
+				Result.append (format)
+
+				if not users.islast then
+					Result.append ("%N")
+				end
+				users.forth
+			end
+		end
+
 feature -- Helper Queries
 	mid_exists (mid: INTEGER_64): BOOLEAN
 		-- Returns true of mid exists
