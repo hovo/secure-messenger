@@ -6,16 +6,20 @@ note
 
 class
 	ETF_LIST_GROUPS
-inherit 
+inherit
 	ETF_LIST_GROUPS_INTERFACE
 		redefine list_groups end
 create
 	make
-feature -- command 
+feature -- command
 	list_groups
     	do
-			-- perform some update on the model state
-			model.default_update
+			if model.messenger.groups.is_empty then
+				model.set_report (model.warn_no_groups)
+			else
+				-- Add model.messenger.print_sorted_groups
+				model.update_count
+			end
 			etf_cmd_container.on_change.notify ([Current])
     	end
 
