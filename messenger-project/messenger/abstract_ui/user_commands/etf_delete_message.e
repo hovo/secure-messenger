@@ -17,20 +17,25 @@ feature -- command
 			delete_message_precond(uid, mid)
     	do
     		if uid <= 0 or mid <= 0 then
+    			model.set_status (model.error)
     			model.set_report (model.err_non_positive_id)
     		elseif not model.messenger.uid_exists (uid) then
+    			model.set_status (model.error)
 				model.set_report (model.err_user_dne)
 			elseif not model.messenger.mid_exists (mid) then
+				model.set_status (model.error)
 				model.set_report (model.err_message_dne)
 			elseif not model.messenger.user_at_uid (uid).old_messages.has (mid) then
+				model.set_status (model.error)
 				model.set_report (model.err_message_not_found_in_new_old)
 			elseif not model.messenger.user_at_uid (uid).new_messages.has (mid) then
+				model.set_status (model.error)
 				model.set_report (model.err_message_not_found_in_new_old)
 			else
 				model.messenger.delete_message (uid, mid)
-				model.update_count
-				model.set_report (model.success_ok)
+				model.set_status (model.success_ok)
     		end
+    		model.update_count
 			etf_cmd_container.on_change.notify ([Current])
     	end
 

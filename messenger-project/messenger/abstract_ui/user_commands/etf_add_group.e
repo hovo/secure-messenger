@@ -19,17 +19,20 @@ feature -- command
 			group: GROUP
     	do
 			if gid <= 0 then
+				model.set_status (model.error)
 				model.set_report (model.err_non_positive_id)
 			elseif model.messenger.gid_exists (gid) then
+				model.set_status (model.error)
 				model.set_report (model.err_id_in_use)
 			elseif not (group_name.count > 0 and group_name.at (1).is_alpha) then
+				model.set_status (model.error)
 				model.set_report (model.err_group_name_start)
 			else
 				create group.make (gid, group_name)
 				model.messenger.add_group (group)
-				model.update_count
-				model.set_report (model.success_ok)
+				model.set_status (model.success_ok)
 			end
+			model.update_count
 			etf_cmd_container.on_change.notify ([Current])
     	end
 

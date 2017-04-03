@@ -18,9 +18,9 @@ feature -- command
 				model.set_report (model.warn_no_groups)
 			else
 				-- Add model.messenger.print_sorted_groups
-				model.update_count
-				model.set_report (model.success_ok)
 			end
+			model.update_count
+			model.set_status (model.success_ok)
 			etf_cmd_container.on_change.notify ([Current])
     	end
 

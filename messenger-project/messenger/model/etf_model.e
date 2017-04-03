@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			create messenger.make
 			count := 0
 			report := success_ok
+			status := success_ok
 
 		end
 
@@ -35,6 +36,11 @@ feature -- model attributes
 	messenger: MESSENGER
 
 feature {ETF_COMMAND} -- ERROR MESSAGES
+	status: STRING
+		attribute
+			create Result.make_empty
+		end
+
 	report: STRING
 		attribute
 			create Result.make_empty
@@ -172,18 +178,17 @@ feature
 			report := new_report
 		end
 
+	set_status (new_status: STRING)
+		do
+			status := new_status
+		end
+
 	update_count
 		do
 			count := count + 1
 		end
 
 feature -- model operations
-	default_update
-			-- Perform update to the model state.
-		do
-			i := i + 1
-		end
-
 	reset
 			-- Reset model state.
 		do
@@ -197,14 +202,16 @@ feature -- queries
 		do
 
 			create Result.make_empty
-			format := "  " + count.out + ":" + report +  "%N"
-			if count > 0 then
-				format := "  " + count.out + ":" + report +  "%N" +
+			format := "  " + count.out + ":" + status +  "%N"
+			if count > 0 and status /= error then
+				format := "  " + count.out + ":" + status +  "%N" +
 						  "  Users:%N" + messenger.print_sorted_users +
 						  "  Groups:%N" + messenger.print_sorted_groups +
 					  	  "  Registrations:%N" + messenger.list_registrations +
 					  	  "  All messages:%N" + messenger.list_all_messages +
 					      "  Message state:%N" + messenger.message_states
+			elseif status = error then
+				format.append ("  " + report + "%N")
 			end
 			Result.append(format)
 

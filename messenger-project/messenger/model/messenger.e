@@ -63,6 +63,7 @@ feature -- Queries
 			i_th_group (gid).users.force (uid)
 			user_at_uid (uid).registered_to.extend (gid)
 			user_at_uid (uid).registered_to.sort
+
 		ensure
 			registered: user_at_uid (uid).registered_to.has (gid)
 		end

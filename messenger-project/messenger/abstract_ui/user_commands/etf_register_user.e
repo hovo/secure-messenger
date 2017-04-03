@@ -17,18 +17,22 @@ feature -- command
 			register_user_precond(uid, gid)
     	do
     		if uid <= 0  or gid <= 0 then
+    			model.set_status (model.error)
 				model.set_report (model.err_non_positive_id)
 			elseif not model.messenger.uid_exists (uid) then
+				model.set_status (model.error)
 				model.set_report (model.err_user_dne)
 			elseif not model.messenger.gid_exists (gid) then
+				model.set_status (model.error)
 				model.set_report (model.err_group_dne)
 			elseif model.messenger.user_at_uid (uid).registered_to.has (gid) then
+				model.set_status (model.error)
 				model.set_report (model.err_registration_exists)
 			else
 				model.messenger.register_user (uid, gid)
-				model.update_count
-				model.set_report (model.success_ok)
+				model.set_status (model.success_ok)
     		end
+    		model.update_count
 			etf_cmd_container.on_change.notify ([Current])
     	end
 
