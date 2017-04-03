@@ -343,6 +343,7 @@ feature -- print Queries
 		-- Print state of messages
 		local
 			format: STRING
+			message_status: STRING
 		do
 			create Result.make_empty
 			create format.make_empty
@@ -357,14 +358,23 @@ feature -- print Queries
 				until
 					users.after
 				loop
-					format := "(" + users.item.uid.out + ", " + messages.item.mid.out + ")"
+					if messages.item.read_by.has (users.item.uid) then
+						message_status := "read"
+					elseif users.item.new_messages.has (messages.item.mid) then
+						message_status := "unread"
+					else
+						message_status := "unavailable"
+					end
+					format := "(" + users.item.uid.out + ", " + messages.item.mid.out + ")->" + message_status
+					Result.append(format)
 					if not users.islast then
 						Result.append ("%N")
 					end
-					Result.append(format)
 					users.forth
 				end
-				
+				if not messages.islast then
+					Result.append ("%N")
+				end
 				messages.forth
 			end
 		end
