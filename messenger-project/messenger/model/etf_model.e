@@ -51,6 +51,66 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 			Result := "User name must start with a letter."
 		end
 
+	err_group_name_start: STRING
+		attribute
+			Result := "Group name must start with a letter."
+		end
+
+	err_user_dne: STRING
+		attribute
+			Result := "User with this ID does not exist."
+		end
+
+	err_group_dne: STRING
+		attribute
+			Result := "Group with this ID does not exist."
+		end
+
+	err_registration_exists: STRING
+		attribute
+			Result := "This registration already exists."
+		end
+
+	err_empty_message: STRING
+		attribute
+			Result := "A message may not be an empty string."
+		end
+
+	err_not_authorized_to_send: STRING
+		attribute
+			Result := "User not authorized to send messages to the specified group."
+		end
+
+	err_message_dne: STRING
+		attribute
+			Result := "Message with this ID does not exist."
+		end
+
+	err_not_auhorized_to_access: STRING
+		attribute
+			Result := "User not authorized to access this message."
+		end
+
+	err_message_unavailable: STRING
+		attribute
+			Result := "Message with this ID unavailable."
+		end
+
+	err_message_already_read: STRING
+		attribute
+			Result := "Message has already been read. See `list_old_messages'."
+		end
+
+	err_message_not_found_in_new_old: STRING
+		attribute
+			Result := "Message with this ID not found in old/read messages."
+		end
+
+	err_message_lenght: STRING
+		attribute
+			Result := "Message length must be greater than zero."
+		end
+
 	
 
 feature -- Set report
