@@ -141,6 +141,18 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 			Result := "Message length must be greater than zero."
 		end
 
+	warn_no_groups: STRING
+		-- There are no groups registered in the system yet.
+		attribute
+			Result := "There are no groups registered in the system yet."
+		end
+
+	warn_no_users: STRING
+		-- There are no users registered in the system yet.
+		attribute
+			Result := "There are no users registered in the system yet."
+		end
+
 
 
 feature

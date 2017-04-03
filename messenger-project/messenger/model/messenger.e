@@ -15,7 +15,7 @@ feature -- Attributes
 	groups: SORTED_TWO_WAY_LIST[GROUP]
 	messages: SORTED_TWO_WAY_LIST[MESSAGE]
 	message_count: INTEGER_64
-	message_preview_length: INTEGER
+	message_preview_length: INTEGER_64
 
 feature
 	make
@@ -147,7 +147,7 @@ feature -- Queries
 			sender.old_messages.remove
 		end
 
-	set_message_preview (length: INTEGER)
+	set_message_preview (length: INTEGER_64)
 		-- updates the message preview length
 		require
 			valid_length: length > 0
@@ -172,7 +172,7 @@ feature -- print Queries
 			loop
 				message := messages.item
 				if message.content.count > message_preview_length then
-					preview_text := messages.item.content.substring (1, message_preview_length) + "..."
+					preview_text := messages.item.content.substring (1, message_preview_length.as_integer_32) + "..."
 				else
 					preview_text := messages.item.content
 				end
@@ -209,7 +209,7 @@ feature -- print Queries
 				message := i_th_message (new_message_list.item)
 
 				if message.content.count > message_preview_length then
-					preview_text := message.content.substring (1, message_preview_length) + "..."
+					preview_text := message.content.substring (1, message_preview_length.as_integer_32) + "..."
 				else
 					preview_text := message.content
 				end
@@ -246,7 +246,7 @@ feature -- print Queries
 				message := i_th_message (old_message_list.item)
 
 				if message.content.count > message_preview_length then
-					preview_text := message.content.substring (1, message_preview_length) + "..."
+					preview_text := message.content.substring (1, message_preview_length.as_integer_32) + "..."
 				else
 					preview_text := message.content
 				end
