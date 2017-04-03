@@ -13,7 +13,7 @@ create
 feature -- Attributes
 	users: SORTED_TWO_WAY_LIST[USER]
 	groups: SORTED_TWO_WAY_LIST[GROUP]
-	messages: LIST[MESSAGE]
+	messages: SORTED_TWO_WAY_LIST[MESSAGE]
 	message_count: INTEGER_64
 	message_preview_length: INTEGER
 
@@ -22,7 +22,7 @@ feature
 		do
 			create users.make
 			create groups.make
-			create {ARRAYED_LIST[MESSAGE]} messages.make (0)
+			create messages.make
 			message_count := message_count + 1
 			message_preview_length := 15
 		end
@@ -59,7 +59,6 @@ feature -- Queries
 			user_id_exists: uid_exists (uid)
 			gid_exists: gid_exists (gid)
 			new_registration: not user_at_uid (uid).registered_to.has (gid)
-
 		do
 			i_th_group (gid).users.force (uid)
 			user_at_uid (uid).registered_to.force (gid)
@@ -81,7 +80,8 @@ feature -- Queries
 			user.old_messages.extend (message.mid)
 			user.old_messages.sort
 			message.read_by.force (message.sender)
-			messages.force (message)
+			messages.extend (message)
+			messages.sort
 
 			group_users := i_th_group (message.to_group).users
 
@@ -93,7 +93,6 @@ feature -- Queries
 				loop_user := user_at_uid (group_users.item)
 				loop_user.new_messages.extend (message.mid)
 				loop_user.new_messages.sort
-
 				group_users.forth
 			end
 			message_count := message_count + 1
@@ -157,6 +156,36 @@ feature -- Queries
 
 
 feature -- print Queries
+	list_all_messages: STRING
+		local
+			format: STRING
+			preview_text: STRING
+			message: MESSAGE
+		do
+			create Result.make_empty
+
+			from
+				messages.start
+			until
+				messages.after
+			loop
+				message := messages.item
+				if message.content.count > message_preview_length then
+					preview_text := messages.item.content.substring (1, message_preview_length) + "..."
+				else
+					preview_text := messages.item.content
+				end
+
+				format := message.mid.out + "->[sender: " + message.sender.out +
+						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
+
+				Result.append (format)
+				if not messages.islast then
+					Result.append ("%N")
+				end
+				messages.forth
+			end
+		end
 	list_new_messages (uid: INTEGER_64):STRING
 		-- list user's new messages
 		require

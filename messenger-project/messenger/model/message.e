@@ -6,7 +6,14 @@ note
 
 class
 	MESSAGE
-	
+
+inherit
+	COMPARABLE
+		redefine
+			is_greater,
+			is_less
+		end
+
 create
 	make
 
@@ -30,6 +37,17 @@ feature
 			to_group := gid
 			content := text
 			create {ARRAYED_LIST[INTEGER_64]} read_by.make (0)
+		end
+
+feature -- Redefined COMPARABLE routines
+	is_greater alias ">" (other: like Current): BOOLEAN
+		do
+			Result := Current.mid.is_greater (other.mid)
+		end
+
+	is_less alias "<" (other: like Current): BOOLEAN
+		do
+			Result := Current.mid.is_less (other.mid)
 		end
 
 end
