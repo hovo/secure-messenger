@@ -350,17 +350,20 @@ feature -- Tests
 		local
 			messenger: MESSENGER
 			g1: GROUP
-			u1, u2: USER
+			u1, u2, u3: USER
 			m1, m2, m3: MESSAGE
 		do
 			comment ("t13: print message state")
 			create messenger.make
+			create g1.make (1, "fam")
+			messenger.add_group (g1)
 			create u1.make (1, "hovo")
 			messenger.add_user (u1)
 			create u2.make (2, "vahe")
 			messenger.add_user (u2)
-			create g1.make (1, "fam")
-			messenger.add_group (g1)
+			messenger.register_user (u2.uid, g1.gid)
+			create u3.make (3, "davo")
+			messenger.add_user (u3)
 			messenger.register_user (u1.uid, g1.gid)
 			create m1.make (messenger.message_count, u1.uid, g1.gid, "hey")
 			messenger.send_message (m1)
@@ -370,6 +373,7 @@ feature -- Tests
 			messenger.send_message (m3)
 
 			sub_comment (messenger.message_states)
+			result := true
 		end
 
 
