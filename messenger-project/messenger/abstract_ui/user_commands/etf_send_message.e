@@ -32,6 +32,7 @@ feature -- command
 				create message.make (model.messenger.message_count, uid, gid, txt)
 				model.messenger.send_message (message)
 				model.update_count
+				model.set_report (model.success_ok)
     		end
 			etf_cmd_container.on_change.notify ([Current])
     	end

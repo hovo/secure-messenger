@@ -177,13 +177,11 @@ feature -- print Queries
 					preview_text := messages.item.content
 				end
 
-				format := message.mid.out + "->[sender: " + message.sender.out +
+				format := "      " + message.mid.out + "->[sender: " + message.sender.out +
 						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
 
-				Result.append (format)
-				if not messages.islast then
-					Result.append ("%N")
-				end
+				Result.append (format + "%N")
+
 				messages.forth
 			end
 		end
@@ -316,7 +314,7 @@ feature -- print Queries
 			until
 				users.after
 			loop
-				format := "[" + users.item.uid.out + ", " + users.item.name + "]->{"
+				format := "      [" + users.item.uid.out + ", " + users.item.name + "]->{"
 				from
 					users.item.registered_to.start
 				until
@@ -330,11 +328,8 @@ feature -- print Queries
 					users.item.registered_to.forth
 				end
 				format.append ("}")
-				Result.append (format)
+				Result.append (format + "%N")
 
-				if not users.islast then
-					Result.append ("%N")
-				end
 				users.forth
 			end
 		end
@@ -367,7 +362,7 @@ feature -- print Queries
 					else
 						message_status := "unavailable"
 					end
-					format := "(" + sorted_user_list.item.out + ", " + messages.item.mid.out + ")->" + message_status
+					format := "      (" + sorted_user_list.item.out + ", " + messages.item.mid.out + ")->" + message_status
 					Result.append(format)
 					if not sorted_user_list.islast then
 						Result.append ("%N")
@@ -396,10 +391,7 @@ feature -- print Queries
 				sorted_users.after
 			loop
 				user := user_at_uid (sorted_users.item)
-				Result.append (user.uid.out + "->" + user.name)
-				if not sorted_users.islast then
-					Result.append ("%N")
-				end
+				Result.append ("      " + user.uid.out + "->" + user.name + "%N")
 				sorted_users.forth
 			end
 
@@ -420,10 +412,7 @@ feature -- print Queries
 				sorted_groups.after
 			loop
 				group := i_th_group (sorted_groups.item)
-				Result.append (group.gid.out + "->" + group.name)
-				if not sorted_groups.islast then
-					Result.append ("%N")
-				end
+				Result.append ("      " + group.gid.out + "->" + group.name + "%N")
 				sorted_groups.forth
 			end
 

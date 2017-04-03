@@ -27,6 +27,7 @@ feature -- command
 			else
 				model.messenger.register_user (uid, gid)
 				model.update_count
+				model.set_report (model.success_ok)
     		end
 			etf_cmd_container.on_change.notify ([Current])
     	end

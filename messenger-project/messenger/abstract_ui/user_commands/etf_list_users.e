@@ -19,6 +19,7 @@ feature -- command
 			else
 				-- add model.messenger.print_sorted_users
 				model.update_count
+				model.set_report (model.success_ok)
 			end
 			etf_cmd_container.on_change.notify ([Current])
     	end

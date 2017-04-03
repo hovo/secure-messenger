@@ -28,6 +28,7 @@ feature -- command
 				create user.make (uid, user_name)
 				model.messenger.add_user (user)
 				model.update_count
+				model.set_report (model.success_ok)
 			end
 			etf_cmd_container.on_change.notify ([Current])
     	end

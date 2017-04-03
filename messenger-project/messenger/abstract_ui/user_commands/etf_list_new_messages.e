@@ -25,6 +25,7 @@ feature -- command
 			else
 				-- Add model.messenger.list_new_messages (uid)
 				model.update_count
+				model.set_report (model.success_ok)
     		end
 			etf_cmd_container.on_change.notify ([Current])
     	end

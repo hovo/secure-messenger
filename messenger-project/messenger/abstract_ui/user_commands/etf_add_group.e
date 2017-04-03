@@ -28,6 +28,7 @@ feature -- command
 				create group.make (gid, group_name)
 				model.messenger.add_group (group)
 				model.update_count
+				model.set_report (model.success_ok)
 			end
 			etf_cmd_container.on_change.notify ([Current])
     	end

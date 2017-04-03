@@ -23,7 +23,8 @@ feature {NONE} -- Initialization
 			create s.make_empty
 			i := 0
 			create messenger.make
-			count := 1
+			count := 0
+			report := success_ok
 
 		end
 
@@ -191,12 +192,27 @@ feature -- model operations
 
 feature -- queries
 	out : STRING
+		local
+			format: STRING
 		do
-			create Result.make_from_string ("  ")
-			Result.append ("System State: default model state ")
-			Result.append ("(")
-			Result.append (i.out)
-			Result.append (")")
+
+			create Result.make_empty
+			format := "  " + count.out + ":" + report +  "%N"
+			if count > 0 then
+				format := "  " + count.out + ":" + report +  "%N" +
+						  "  Users:%N" + messenger.print_sorted_users +
+						  "  Groups:%N" + messenger.print_sorted_groups +
+					  	  "  Registrations:%N" + messenger.list_registrations +
+					  	  "  All messages:%N" + messenger.list_all_messages +
+					      "  Message state:%N" + messenger.message_states
+			end
+			Result.append(format)
+
+
+			--Result.append ("System State: default model state ")
+			--Result.append ("(")
+			--Result.append (i.out)
+			--Result.append (")")
 		end
 
 end
