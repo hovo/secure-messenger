@@ -395,12 +395,13 @@ feature -- Tests
 			create g5.make (9, "a")
 			messenger.add_group (g5)
 
+			sub_comment (messenger.print_sorted_groups)
+
 			Result := messenger.sort_group_by_gid.at (1) = g3.gid and
 					  messenger.sort_group_by_gid.at (2) = g4.gid and
 					  messenger.sort_group_by_gid.at (3) = g2.gid and
 					  messenger.sort_group_by_gid.at (4) = g1.gid and
 					  messenger.sort_group_by_gid.at (5) = g5.gid
 		end
-
 
 end

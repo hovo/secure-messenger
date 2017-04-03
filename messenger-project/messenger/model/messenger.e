@@ -381,6 +381,54 @@ feature -- print Queries
 			end
 		end
 
+	print_sorted_users: STRING
+		-- print users sorted by their uid
+		local
+			sorted_users: SORTED_TWO_WAY_LIST[INTEGER_64]
+			user: USER
+		do
+			create Result.make_empty
+			sorted_users := sort_user_by_uid
+
+			from
+				sorted_users.start
+			until
+				sorted_users.after
+			loop
+				user := user_at_uid (sorted_users.item)
+				Result.append (user.uid.out + "->" + user.name)
+				if not sorted_users.islast then
+					Result.append ("%N")
+				end
+				sorted_users.forth
+			end
+
+		end
+
+	print_sorted_groups: STRING
+		-- print users sorted by their uid
+		local
+			sorted_groups: SORTED_TWO_WAY_LIST[INTEGER_64]
+			group: GROUP
+		do
+			create Result.make_empty
+			sorted_groups := sort_group_by_gid
+
+			from
+				sorted_groups.start
+			until
+				sorted_groups.after
+			loop
+				group := i_th_group (sorted_groups.item)
+				Result.append (group.gid.out + "->" + group.name)
+				if not sorted_groups.islast then
+					Result.append ("%N")
+				end
+				sorted_groups.forth
+			end
+
+		end
+
 feature -- Helper Queries
 	sort_user_by_uid: SORTED_TWO_WAY_LIST[INTEGER_64]
 		-- Sort list by order of id
