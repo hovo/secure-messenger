@@ -158,6 +158,11 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 			Result := "There are no new messages for this user."
 		end
 
+	warn_no_old_messages: STRING
+		attribute
+			Result := "There are no old messages for this user."
+		end
+
 
 
 feature
