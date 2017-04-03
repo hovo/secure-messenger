@@ -34,7 +34,7 @@ feature -- Attributes
 		attribute
 			create Result.make_empty
 		end
-	registered_to: LIST[INTEGER_64]
+	registered_to: SORTED_TWO_WAY_LIST[INTEGER_64]
 	new_messages: SORTED_TWO_WAY_LIST[INTEGER_64]
 	old_messages: SORTED_TWO_WAY_LIST[INTEGER_64]
 
@@ -48,7 +48,7 @@ feature
 		do
 			uid := user_id
 			name := user_name
-			create {ARRAYED_LIST[INTEGER_64]} registered_to.make (0)
+			create registered_to.make
 			create new_messages.make
 			create old_messages.make
 		end

@@ -61,7 +61,8 @@ feature -- Queries
 			new_registration: not user_at_uid (uid).registered_to.has (gid)
 		do
 			i_th_group (gid).users.force (uid)
-			user_at_uid (uid).registered_to.force (gid)
+			user_at_uid (uid).registered_to.extend (gid)
+			user_at_uid (uid).registered_to.sort
 		ensure
 			registered: user_at_uid (uid).registered_to.has (gid)
 		end
@@ -186,6 +187,7 @@ feature -- print Queries
 				messages.forth
 			end
 		end
+
 	list_new_messages (uid: INTEGER_64):STRING
 		-- list user's new messages
 		require
