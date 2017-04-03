@@ -21,19 +21,32 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create s.make_empty
-			create messenger.make
 			i := 0
+			create messenger.make
+			count := 1
+
 		end
 
 feature -- model attributes
 	s: STRING
 	i: INTEGER
+	count: INTEGER
 	messenger: MESSENGER
 
 feature {ETF_COMMAND} -- ERROR MESSAGES
 	report: STRING
 		attribute
 			create Result.make_empty
+		end
+
+	success_ok: STRING
+		attribute
+			Result := "  OK"
+		end
+
+	error: STRING
+		attribute
+			Result := "  ERROR"
 		end
 
 	err_non_positive_id: STRING
@@ -111,12 +124,17 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 			Result := "Message length must be greater than zero."
 		end
 
-	
 
-feature -- Set report
+
+feature
 	set_report (new_report: STRING)
 		do
 			report := new_report
+		end
+
+	update_count (new_count: INTEGER)
+		do
+			count := new_count
 		end
 
 feature -- model operations
