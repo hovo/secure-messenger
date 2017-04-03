@@ -36,6 +36,23 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 			create Result.make_empty
 		end
 
+	err_non_positive_id: STRING
+		attribute
+			Result := "ID must be a positive integer."
+		end
+
+	err_id_in_use: STRING
+		attribute
+			Result := "ID already in use."
+		end
+
+	err_user_name_start: STRING
+		attribute
+			Result := "User name must start with a letter."
+		end
+
+	
+
 feature -- Set report
 	set_report (new_report: STRING)
 		do
