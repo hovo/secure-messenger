@@ -6,18 +6,26 @@ note
 
 class
 	ETF_LIST_NEW_MESSAGES
-inherit 
+inherit
 	ETF_LIST_NEW_MESSAGES_INTERFACE
 		redefine list_new_messages end
 create
 	make
-feature -- command 
+feature -- command
 	list_new_messages(uid: INTEGER_64)
-		require else 
+		require else
 			list_new_messages_precond(uid)
     	do
-			-- perform some update on the model state
-			model.default_update
+    		if uid <= 0 then
+    			model.set_report (model.err_non_positive_id)
+    		elseif not model.messenger.uid_exists (uid) then
+				model.set_report (model.err_user_dne)
+			elseif model.messenger.user_at_uid (uid).new_messages.is_empty then
+				model.set_report (model.warn_no_new_messages)
+			else
+				-- Add model.messenger.list_new_messages (uid)
+				model.update_count
+    		end
 			etf_cmd_container.on_change.notify ([Current])
     	end
 

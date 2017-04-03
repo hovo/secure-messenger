@@ -153,6 +153,11 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 			Result := "There are no users registered in the system yet."
 		end
 
+	warn_no_new_messages: STRING
+		attribute
+			Result := "There are no new messages for this user."
+		end
+
 
 
 feature
