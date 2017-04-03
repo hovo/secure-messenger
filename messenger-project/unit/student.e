@@ -30,6 +30,7 @@ feature
 			add_boolean_case (agent t11)
 			add_boolean_case (agent t12)
 			add_boolean_case (agent t13)
+			add_boolean_case (agent t14)
 		end
 
 feature -- Tests
@@ -374,6 +375,31 @@ feature -- Tests
 
 			sub_comment (messenger.message_states)
 			result := true
+		end
+
+	t14: BOOLEAN
+		local
+			g1, g2, g3, g4, g5: GROUP
+			messenger: MESSENGER
+		do
+			comment ("t14: sort group by gid in ascending order")
+			create messenger.make
+			create g1.make (5, "abc")
+			messenger.add_group (g1)
+			create g2.make (4, "abc")
+			messenger.add_group (g2)
+			create g3.make (1, "z")
+			messenger.add_group (g3)
+			create g4.make (2, "ab")
+			messenger.add_group (g4)
+			create g5.make (9, "a")
+			messenger.add_group (g5)
+
+			Result := messenger.sort_group_by_gid.at (1) = g3.gid and
+					  messenger.sort_group_by_gid.at (2) = g4.gid and
+					  messenger.sort_group_by_gid.at (3) = g2.gid and
+					  messenger.sort_group_by_gid.at (4) = g1.gid and
+					  messenger.sort_group_by_gid.at (5) = g5.gid
 		end
 
 

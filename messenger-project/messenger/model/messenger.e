@@ -344,9 +344,11 @@ feature -- print Queries
 		local
 			format: STRING
 			message_status: STRING
+			sorted_user_list: SORTED_TWO_WAY_LIST[INTEGER_64]
 		do
 			create Result.make_empty
 			create format.make_empty
+			sorted_user_list := sort_user_by_uid
 
 			from
 				messages.start
@@ -354,23 +356,23 @@ feature -- print Queries
 				messages.after
 			loop
 				from
-					users.start
+					sorted_user_list.start
 				until
-					users.after
+					sorted_user_list.after
 				loop
-					if messages.item.read_by.has (users.item.uid) then
+					if messages.item.read_by.has (sorted_user_list.item) then
 						message_status := "read"
-					elseif users.item.new_messages.has (messages.item.mid) then
+					elseif user_at_uid (sorted_user_list.item).new_messages.has (messages.item.mid) then
 						message_status := "unread"
 					else
 						message_status := "unavailable"
 					end
-					format := "(" + users.item.uid.out + ", " + messages.item.mid.out + ")->" + message_status
+					format := "(" + sorted_user_list.item.out + ", " + messages.item.mid.out + ")->" + message_status
 					Result.append(format)
-					if not users.islast then
+					if not sorted_user_list.islast then
 						Result.append ("%N")
 					end
-					users.forth
+					sorted_user_list.forth
 				end
 				if not messages.islast then
 					Result.append ("%N")
@@ -380,6 +382,44 @@ feature -- print Queries
 		end
 
 feature -- Helper Queries
+	sort_user_by_uid: SORTED_TWO_WAY_LIST[INTEGER_64]
+		-- Sort list by order of id
+		local
+			sorted_list: SORTED_TWO_WAY_LIST[INTEGER_64]
+		do
+			create sorted_list.make
+			from
+				users.start
+			until
+				users.after
+			loop
+				sorted_list.extend(users.item.uid)
+				sorted_list.sort
+				users.forth
+			end
+
+			Result := sorted_list
+		end
+
+	sort_group_by_gid: SORTED_TWO_WAY_LIST[INTEGER_64]
+		-- Sort list by order of id
+		local
+			sorted_list: SORTED_TWO_WAY_LIST[INTEGER_64]
+		do
+			create sorted_list.make
+			from
+				groups.start
+			until
+				groups.after
+			loop
+				sorted_list.extend(groups.item.gid)
+				sorted_list.sort
+				groups.forth
+			end
+
+			Result := sorted_list
+		end
+
 	mid_exists (mid: INTEGER_64): BOOLEAN
 		-- Returns true of mid exists
 		do
