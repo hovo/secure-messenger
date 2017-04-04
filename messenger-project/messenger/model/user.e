@@ -51,6 +51,9 @@ feature
 			create registered_to.make
 			create new_messages.make
 			create old_messages.make
+			registered_to.compare_objects
+			new_messages.compare_objects
+			old_messages.compare_objects
 		end
 
 feature
@@ -61,16 +64,6 @@ feature
 		do
 			format := uid.out + "->" + name
 			Result := format
-		end
-
-	set_new_messages(msgs: SORTED_TWO_WAY_LIST[INTEGER_64])
-		do
-			new_messages := msgs
-		end
-
-	set_old_messages(msgs: SORTED_TWO_WAY_LIST[INTEGER_64])
-		do
-			old_messages := msgs
 		end
 
 feature -- Redefined COMPARABLE routines

@@ -117,21 +117,13 @@ feature -- Queries
 		local
 			user: USER
 			message: MESSAGE
-			newmsgs: SORTED_TWO_WAY_LIST[INTEGER_64]
     	do
-    		create newmsgs.make
     		-- Get the message
     		message := i_th_message(mid)
     		user := user_at_uid (uid)
 
-    		-- Remove from new_messages list
-    		across user.new_messages as c loop
-    			if c.item /= mid then
-    				newmsgs.extend (c.item)
-    			end
-    		end
-    		newmsgs.sort
-    		user.set_new_messages(newmsgs)
+			-- Remove from new_messages list
+    		user.new_messages.prune_all(mid)
 
     		-- Add to old_messages list
     		user.old_messages.extend (mid)
@@ -152,30 +144,9 @@ feature -- Queries
 			user_exists: uid_exists (uid)
 			message_exists: mid_exists (mid)
 			old_read_exists: user_at_uid (uid).old_messages.has (mid) and i_th_message (mid).read_by.has (uid)
-		local
-			newreadby: LIST[INTEGER_64]
-			oldmsgs: SORTED_TWO_WAY_LIST[INTEGER_64]
-			user: USER
 		do
-			user := user_at_uid(uid)
-			create oldmsgs.make
-			-- Remove from new_messages list
-    		across user.old_messages as c loop
-    			if c.item /= mid then
-    				oldmsgs.extend (c.item)
-    			end
-    		end
-    		oldmsgs.sort
-    		user.set_old_messages(oldmsgs)
-
-			create {ARRAYED_LIST[INTEGER_64]} newreadby.make (0)
-			across i_th_message(mid).read_by as c loop
-				if c.item /= uid then
-					newreadby.force(c.item)
-				end
-			end
-			i_th_message(mid).set_read_by(newreadby) -- .prune_all (mid)
-
+    		user_at_uid(uid).old_messages.prune_all (mid)
+			i_th_message(mid).read_by.prune_all (uid)
 		ensure
 			not_in_old_messages: not user_at_uid(uid).old_messages.has (mid)
 			not_in_read_by: not i_th_message(mid).read_by.has (uid)

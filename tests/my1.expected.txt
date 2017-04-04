@@ -1,0 +1,126 @@
+  0:  OK
+
+->add_user(1,"a")
+  1:  OK
+  Users:
+      1->a
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->add_user(2,"b")
+  2:  OK
+  Users:
+      1->a
+      2->b
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->add_group(100,"x")
+  3:  OK
+  Users:
+      1->a
+      2->b
+  Groups:
+      100->x
+  Registrations:
+  All messages:
+  Message state:
+
+->register_user(1,100)
+  4:  OK
+  Users:
+      1->a
+      2->b
+  Groups:
+      100->x
+  Registrations:
+      [1, a]->{100->x}
+  All messages:
+  Message state:
+
+->register_user(2,100)
+  5:  OK
+  Users:
+      1->a
+      2->b
+  Groups:
+      100->x
+  Registrations:
+      [1, a]->{100->x}
+      [2, b]->{100->x}
+  All messages:
+  Message state:
+
+->send_message(2,100,"test")
+  6:  OK
+  Users:
+      1->a
+      2->b
+  Groups:
+      100->x
+  Registrations:
+      [1, a]->{100->x}
+      [2, b]->{100->x}
+  All messages:
+      1->[sender: 2, group: 100, content: "test"]
+  Message state:
+      (1, 1)->unread
+      (2, 1)->read
+
+->delete_message(2,1)
+  7:  OK
+  Users:
+      1->a
+      2->b
+  Groups:
+      100->x
+  Registrations:
+      [1, a]->{100->x}
+      [2, b]->{100->x}
+  All messages:
+      1->[sender: 2, group: 100, content: "test"]
+  Message state:
+      (1, 1)->unread
+      (2, 1)->unavailable
+
+->delete_message(1,1)
+  8:  ERROR 
+  Message with this ID not found in old/read messages.
+
+->read_message(1,1)
+  9:  OK
+  Message for user [1, a]: [1, "test"]
+  Users:
+      1->a
+      2->b
+  Groups:
+      100->x
+  Registrations:
+      [1, a]->{100->x}
+      [2, b]->{100->x}
+  All messages:
+      1->[sender: 2, group: 100, content: "test"]
+  Message state:
+      (1, 1)->read
+      (2, 1)->unavailable
+
+->delete_message(1,1)
+  10:  OK
+  Users:
+      1->a
+      2->b
+  Groups:
+      100->x
+  Registrations:
+      [1, a]->{100->x}
+      [2, b]->{100->x}
+  All messages:
+      1->[sender: 2, group: 100, content: "test"]
+  Message state:
+      (1, 1)->unavailable
+      (2, 1)->unavailable
+

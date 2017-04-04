@@ -37,12 +37,7 @@ feature
 			to_group := gid
 			content := text
 			create {ARRAYED_LIST[INTEGER_64]} read_by.make (0)
-		end
-
-feature
-	set_read_by (new_read_by: LIST[INTEGER_64])
-		do
-			read_by := new_read_by
+			read_by.compare_objects
 		end
 
 feature -- Redefined COMPARABLE routines
