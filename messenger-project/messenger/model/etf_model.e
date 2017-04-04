@@ -249,6 +249,9 @@ feature -- queries
 					  	  "  Registrations:%N" + messenger.list_registrations +
 					  	  "  All messages:%N" + messenger.list_all_messages +
 					      "  Message state:%N" + messenger.message_states)
+					      if not messenger.message_states.is_empty then
+							Result.append ("%N")
+					      end
 					end
 				else -- handle queries
 					Result.append ("  " + report + "%N")

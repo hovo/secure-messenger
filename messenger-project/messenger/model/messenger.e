@@ -60,10 +60,9 @@ feature -- Queries
 			gid_exists: gid_exists (gid)
 			new_registration: not user_at_uid (uid).registered_to.has (gid)
 		do
-			i_th_group (gid).users.force (uid)
 			user_at_uid (uid).registered_to.extend (gid)
 			user_at_uid (uid).registered_to.sort
-
+			i_th_group (gid).users.force (uid)
 		ensure
 			registered: user_at_uid (uid).registered_to.has (gid)
 		end
@@ -78,12 +77,12 @@ feature -- Queries
 			group_users: LIST[INTEGER_64]
 			user, loop_user: USER
 		do
-			user := user_at_uid (message.sender)
-			user.old_messages.extend (message.mid)
-			user.old_messages.sort
-			message.read_by.force (message.sender)
-			messages.extend (message)
-			messages.sort
+			user := user_at_uid (message.sender) -- get sender's uid
+			user.old_messages.extend (message.mid) -- Add mid to sender's old_messages
+			user.old_messages.sort -- keep the list sorted
+			message.read_by.force (message.sender) -- update read by list
+			messages.extend (message) -- add message to list of messages
+			messages.sort -- keep messages sorted
 
 			group_users := i_th_group (message.to_group).users
 
@@ -93,8 +92,11 @@ feature -- Queries
 				group_users.after
 			loop
 				loop_user := user_at_uid (group_users.item)
-				loop_user.new_messages.extend (message.mid)
-				loop_user.new_messages.sort
+				if loop_user.uid /= message.sender then
+					loop_user.new_messages.extend (message.mid)
+					loop_user.new_messages.sort
+				end
+
 				group_users.forth
 			end
 			message_count := message_count + 1
