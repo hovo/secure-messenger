@@ -27,9 +27,10 @@ feature -- command
 				model.set_status (model.error)
 				model.set_report (model.warn_no_old_messages)
 			else
-				-- Add model.messenger.list_old_messages (uid)
+
 				model.set_status (model.success_ok)
 				model.set_command_type (model.command_type_list_old_messages)
+				model.set_report (model.messenger.list_old_messages (uid))
 			end
 			model.update_count
 			etf_cmd_container.on_change.notify ([Current])

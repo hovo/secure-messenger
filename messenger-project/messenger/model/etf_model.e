@@ -251,7 +251,7 @@ feature -- queries
 					      "  Message state:%N" + messenger.message_states)
 					end
 				else -- handle queries
-					Result.append ("  test" + report + "%N")
+					Result.append ("  " + report + "%N")
 				end
 			end
 
