@@ -1,0 +1,14 @@
+add_user(1, "a")
+add_user(2, "b")
+add_group(100, "x")
+
+register_user(1, 100)
+register_user(2, 100)
+
+send_message(2, 100, "test")
+
+delete_message(2,1)
+
+delete_message(1,1)
+read_message(1,1)
+delete_message(1,1)

@@ -39,6 +39,12 @@ feature
 			create {ARRAYED_LIST[INTEGER_64]} read_by.make (0)
 		end
 
+feature
+	set_read_by (new_read_by: LIST[INTEGER_64])
+		do
+			read_by := new_read_by
+		end
+
 feature -- Redefined COMPARABLE routines
 	is_greater alias ">" (other: like Current): BOOLEAN
 		do

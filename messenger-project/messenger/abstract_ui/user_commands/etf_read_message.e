@@ -33,11 +33,12 @@ feature -- command
 			elseif model.messenger.user_at_uid (uid).old_messages.has (mid) then
 				model.set_status (model.error)
 				model.set_report (model.err_message_already_read)
-			elseif not model.messenger.user_at_uid (uid).new_messages.has (mid) then -- and not model.messenger.user_at_uid (uid).old_messages.has (mid) then
+			elseif not model.messenger.user_at_uid (uid).new_messages.has (mid) then
 				model.set_status (model.error)
 				model.set_report (model.err_message_unavailable)
 			else
 				model.messenger.read_message (uid, mid)
+				model.set_report ("test message")
 				model.set_status (model.success_ok)
 			end
 			model.update_count

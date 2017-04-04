@@ -56,7 +56,7 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 	error: STRING
 		-- ERROR
 		attribute
-			Result := "  ERROR"
+			Result := "  ERROR "
 		end
 
 	err_non_positive_id: STRING

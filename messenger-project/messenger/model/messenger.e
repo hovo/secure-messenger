@@ -101,7 +101,7 @@ feature -- Queries
 			end
 			message_count := message_count + 1
 		ensure
-			is_read: message.read_by.has (message.sender)
+			is_read_by_sender: message.read_by.has (message.sender)
 		end
 
 	read_message (uid: INTEGER_64; mid: INTEGER_64)
@@ -117,19 +117,31 @@ feature -- Queries
 		local
 			user: USER
 			message: MESSAGE
+			newmsgs: SORTED_TWO_WAY_LIST[INTEGER_64]
     	do
+    		create newmsgs.make
     		-- Get the message
     		message := i_th_message(mid)
-    		-- Remove from new_messages list
     		user := user_at_uid (uid)
-    		user.new_messages.search (mid)
-    		user.new_messages.remove
+
+    		-- Remove from new_messages list
+    		across user.new_messages as c loop
+    			if c.item /= mid then
+    				newmsgs.extend (c.item)
+    			end
+    		end
+    		newmsgs.sort
+    		user.set_new_messages(newmsgs)
+
     		-- Add to old_messages list
     		user.old_messages.extend (mid)
     		user.old_messages.sort
     		-- Add to read_by list of message
 			message.read_by.force (uid)
 
+		ensure
+			moved_to_old_messages: user_at_uid(uid).old_messages.has (mid)
+			added_to_read_by: i_th_message(mid).read_by.has(uid)
     	end
 
 	delete_message (uid: INTEGER_64; mid: INTEGER_64)
@@ -139,20 +151,34 @@ feature -- Queries
 			positive_mid: mid > 0
 			user_exists: uid_exists (uid)
 			message_exists: mid_exists (mid)
-			old_read_exists: user_at_uid (uid).old_messages.has (mid) or i_th_message (mid).read_by.has (uid)
+			old_read_exists: user_at_uid (uid).old_messages.has (mid) and i_th_message (mid).read_by.has (uid)
 		local
+			newreadby: LIST[INTEGER_64]
+			oldmsgs: SORTED_TWO_WAY_LIST[INTEGER_64]
 			user: USER
-			message: MESSAGE
 		do
-			user := user_at_uid (uid) -- get user from uid
-			message := i_th_message (mid) -- get the message form mid
+			user := user_at_uid(uid)
+			create oldmsgs.make
+			-- Remove from new_messages list
+    		across user.old_messages as c loop
+    			if c.item /= mid then
+    				oldmsgs.extend (c.item)
+    			end
+    		end
+    		oldmsgs.sort
+    		user.set_old_messages(oldmsgs)
 
-			user.old_messages.search (message.mid) -- move cursor to where mid occurs
-			user.old_messages.remove -- remove mid from list
+			create {ARRAYED_LIST[INTEGER_64]} newreadby.make (0)
+			across i_th_message(mid).read_by as c loop
+				if c.item /= uid then
+					newreadby.force(c.item)
+				end
+			end
+			i_th_message(mid).set_read_by(newreadby) -- .prune_all (mid)
 
-			message.read_by.search (uid) -- move cursor to where uid occurs
-			message.read_by.remove	-- remove uid from read by list
-
+		ensure
+			not_in_old_messages: not user_at_uid(uid).old_messages.has (mid)
+			not_in_read_by: not i_th_message(mid).read_by.has (uid)
 		end
 
 	set_message_preview (length: INTEGER_64)
@@ -186,7 +212,7 @@ feature -- print Queries
 				end
 
 				format := "      " + message.mid.out + "->[sender: " + message.sender.out +
-						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
+						  ", group: " + message.to_group.out + ", content: %"" + preview_text + "%"]"
 
 				Result.append (format + "%N")
 
@@ -224,7 +250,7 @@ feature -- print Queries
 				end
 
 				format := "      " + message.mid.out + "->[sender: " + message.sender.out +
-						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
+						  ", group: " + message.to_group.out + ", content: %"" + preview_text + "%"]"
 
 				Result.append (format)
 				if not new_message_list.islast then
@@ -264,7 +290,7 @@ feature -- print Queries
 				end
 
 				format := "      " + message.mid.out + "->[sender: " + message.sender.out +
-						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
+						  ", group: " + message.to_group.out + ", content: %"" + preview_text + "%"]"
 
 				Result.append (format)
 				if not old_message_list.islast then
@@ -327,34 +353,39 @@ feature -- print Queries
 		local
 			format: STRING
 			groups_format: STRING
+			sorted_users: SORTED_TWO_WAY_LIST[INTEGER_64]
+			user: USER
 		do
 			create Result.make_empty
 			create groups_format.make_empty
 
+			sorted_users := sort_user_by_uid
+
 			from
-				users.start
+				sorted_users.start
 			until
-				users.after
+				sorted_users.after
 			loop
-				format := "      [" + users.item.uid.out + ", " + users.item.name + "]->{"
+				user := user_at_uid (sorted_users.item)
+				format := "      [" + user.uid.out + ", " + user.name + "]->{"
 				from
-					users.item.registered_to.start
+					user.registered_to.start
 				until
-					users.item.registered_to.after
+					user.registered_to.after
 				loop
-					groups_format := i_th_group (users.item.registered_to.item).gid.out + "->" + i_th_group (users.item.registered_to.item).name
-					if not users.item.registered_to.islast then
+					groups_format := i_th_group (user.registered_to.item).gid.out + "->" + i_th_group (user.registered_to.item).name
+					if not user.registered_to.islast then
 						groups_format.append (", ")
 					end
 					format.append (groups_format)
-					users.item.registered_to.forth
+					user.registered_to.forth
 				end
 				format.append ("}")
-				if not users.item.registered_to.is_empty then
+				if not user.registered_to.is_empty then
 					Result.append (format + "%N")
 				end
 
-				users.forth
+				sorted_users.forth
 			end
 		end
 

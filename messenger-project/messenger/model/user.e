@@ -63,6 +63,16 @@ feature
 			Result := format
 		end
 
+	set_new_messages(msgs: SORTED_TWO_WAY_LIST[INTEGER_64])
+		do
+			new_messages := msgs
+		end
+
+	set_old_messages(msgs: SORTED_TWO_WAY_LIST[INTEGER_64])
+		do
+			old_messages := msgs
+		end
+
 feature -- Redefined COMPARABLE routines
 	is_equal (other: like Current): BOOLEAN
 		do
