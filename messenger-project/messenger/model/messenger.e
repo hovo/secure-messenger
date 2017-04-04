@@ -111,8 +111,8 @@ feature -- Queries
 			positive_mid: mid > 0
 			user_exists: uid_exists (uid)
 			message_exists: mid_exists (mid)
-			not_authorized: i_th_group (i_th_message (mid).to_group).users.has (uid)
-			message_unavailable: user_at_uid (uid).new_messages.has (mid)
+			--not_authorized: i_th_group (i_th_message (mid).to_group).users.has (uid)
+			--message_unavailable: user_at_uid (uid).new_messages.has (mid)
 			already_read: not user_at_uid (uid).old_messages.has (mid)
 		local
 			user: USER

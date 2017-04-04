@@ -27,15 +27,15 @@ feature -- command
 			elseif not model.messenger.mid_exists (mid) then
 				model.set_status (model.error)
 				model.set_report (model.err_message_dne)
-			elseif model.messenger.i_th_group (model.messenger.i_th_message (mid).to_group).users.has (uid) then
+			elseif not model.messenger.user_at_uid (uid).registered_to.has (model.messenger.i_th_message (mid).to_group) then
 				model.set_status (model.error)
 				model.set_report (model.err_not_auhorized_to_access)
-			elseif not model.messenger.user_at_uid (uid).new_messages.has (mid) then
-				model.set_status (model.error)
-				model.set_report (model.err_message_unavailable)
 			elseif model.messenger.user_at_uid (uid).old_messages.has (mid) then
 				model.set_status (model.error)
 				model.set_report (model.err_message_already_read)
+			elseif not model.messenger.user_at_uid (uid).new_messages.has (mid) then -- and not model.messenger.user_at_uid (uid).old_messages.has (mid) then
+				model.set_status (model.error)
+				model.set_report (model.err_message_unavailable)
 			else
 				model.messenger.read_message (uid, mid)
 				model.set_status (model.success_ok)
