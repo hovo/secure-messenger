@@ -1,0 +1,103 @@
+  0:  OK
+
+->add_group(1,"3311 study group")
+  1:  ERROR 
+  Group name must start with a letter.
+
+->add_user(1,"hovo")
+  2:  OK
+  Users:
+      1->hovo
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->add_user(2,"diana")
+  3:  OK
+  Users:
+      1->hovo
+      2->diana
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->register_user(1,1)
+  4:  ERROR 
+  Group with this ID does not exist.
+
+->register_user(2,1)
+  5:  ERROR 
+  Group with this ID does not exist.
+
+->send_message(1,1,"hey Diana!")
+  6:  ERROR 
+  Group with this ID does not exist.
+
+->list_new_messages(2)
+  7:  OK
+  There are no new messages for this user.
+
+->list_old_messages(2)
+  8:  OK
+  There are no old messages for this user.
+
+->list_new_messages(1)
+  9:  OK
+  There are no new messages for this user.
+
+->list_old_messages(1)
+  10:  OK
+  There are no old messages for this user.
+
+->set_message_preview(3)
+  11:  OK
+  Users:
+      1->hovo
+      2->diana
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->list_new_messages(2)
+  12:  OK
+  There are no new messages for this user.
+
+->set_message_preview(0)
+  13:  ERROR 
+  Message length must be greater than zero.
+
+->read_message(1,1)
+  14:  ERROR 
+  Message with this ID does not exist.
+
+->read_message(2,1)
+  15:  ERROR 
+  Message with this ID does not exist.
+
+->delete_message(1,1)
+  16:  ERROR 
+  Message with this ID does not exist.
+
+->delete_message(2,1)
+  17:  ERROR 
+  Message with this ID does not exist.
+
+->list_new_messages(2)
+  18:  OK
+  There are no new messages for this user.
+
+->list_old_messages(2)
+  19:  OK
+  There are no old messages for this user.
+
+->list_new_messages(1)
+  20:  OK
+  There are no new messages for this user.
+
+->list_old_messages(1)
+  21:  OK
+  There are no old messages for this user.
+

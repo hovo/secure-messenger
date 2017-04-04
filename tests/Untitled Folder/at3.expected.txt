@@ -1,0 +1,193 @@
+  0:  OK
+
+->delete_message(0,1)
+  1:  ERROR 
+  ID must be a positive integer.
+
+->delete_message(1,1)
+  2:  ERROR 
+  User with this ID does not exist.
+
+->add_group(1,"fun")
+  3:  OK
+  Users:
+  Groups:
+      1->fun
+  Registrations:
+  All messages:
+  Message state:
+
+->add_user(1,"Marina")
+  4:  OK
+  Users:
+      1->Marina
+  Groups:
+      1->fun
+  Registrations:
+  All messages:
+  Message state:
+
+->register_user(1,1)
+  5:  OK
+  Users:
+      1->Marina
+  Groups:
+      1->fun
+  Registrations:
+      [1, Marina]->{1->fun}
+  All messages:
+  Message state:
+
+->register_user(1,1)
+  6:  ERROR 
+  This registration already exists.
+
+->send_message(1,1,"qazxswedcvfrtgbnhyujmqazxswedcvfrtgbnhyujm")
+  7:  OK
+  Users:
+      1->Marina
+  Groups:
+      1->fun
+  Registrations:
+      [1, Marina]->{1->fun}
+  All messages:
+      1->[sender: 1, group: 1, content: "qazxswedcvfrtgb..."]
+  Message state:
+      (1, 1)->read
+
+->send_message(1,1,"abc")
+  8:  OK
+  Users:
+      1->Marina
+  Groups:
+      1->fun
+  Registrations:
+      [1, Marina]->{1->fun}
+  All messages:
+      1->[sender: 1, group: 1, content: "qazxswedcvfrtgb..."]
+      2->[sender: 1, group: 1, content: "abc"]
+  Message state:
+      (1, 1)->read
+      (1, 2)->read
+
+->send_message(1,1,"asdasdasd")
+  9:  OK
+  Users:
+      1->Marina
+  Groups:
+      1->fun
+  Registrations:
+      [1, Marina]->{1->fun}
+  All messages:
+      1->[sender: 1, group: 1, content: "qazxswedcvfrtgb..."]
+      2->[sender: 1, group: 1, content: "abc"]
+      3->[sender: 1, group: 1, content: "asdasdasd"]
+  Message state:
+      (1, 1)->read
+      (1, 2)->read
+      (1, 3)->read
+
+->list_old_messages(1)
+  10:  OK
+  Old/read messages for user [1, Marina]:
+      1->[sender: 1, group: 1, content: "qazxswedcvfrtgb..."]
+      2->[sender: 1, group: 1, content: "abc"]
+      3->[sender: 1, group: 1, content: "asdasdasd"]
+
+->list_new_messages(1)
+  11:  OK
+  There are no new messages for this user.
+
+->read_message(1,1)
+  12:  ERROR 
+  Message has already been read. See `list_old_messages'.
+
+->read_message(1,1)
+  13:  ERROR 
+  Message has already been read. See `list_old_messages'.
+
+->read_message(0,1)
+  14:  ERROR 
+  ID must be a positive integer.
+
+->read_message(1,5)
+  15:  ERROR 
+  Message with this ID does not exist.
+
+->read_message(1,2)
+  16:  ERROR 
+  Message has already been read. See `list_old_messages'.
+
+->list_old_messages(1)
+  17:  OK
+  Old/read messages for user [1, Marina]:
+      1->[sender: 1, group: 1, content: "qazxswedcvfrtgb..."]
+      2->[sender: 1, group: 1, content: "abc"]
+      3->[sender: 1, group: 1, content: "asdasdasd"]
+
+->list_new_messages(1)
+  18:  OK
+  There are no new messages for this user.
+
+->read_message(2,1)
+  19:  ERROR 
+  User with this ID does not exist.
+
+->read_message(2,2)
+  20:  ERROR 
+  User with this ID does not exist.
+
+->register_user(2,1)
+  21:  ERROR 
+  User with this ID does not exist.
+
+->read_message(2,1)
+  22:  ERROR 
+  User with this ID does not exist.
+
+->read_message(2,2)
+  23:  ERROR 
+  User with this ID does not exist.
+
+->delete_message(2,2)
+  24:  ERROR 
+  User with this ID does not exist.
+
+->delete_message(2,1)
+  25:  ERROR 
+  User with this ID does not exist.
+
+->set_message_preview(1)
+  26:  OK
+  Users:
+      1->Marina
+  Groups:
+      1->fun
+  Registrations:
+      [1, Marina]->{1->fun}
+  All messages:
+      1->[sender: 1, group: 1, content: "q..."]
+      2->[sender: 1, group: 1, content: "a..."]
+      3->[sender: 1, group: 1, content: "a..."]
+  Message state:
+      (1, 1)->read
+      (1, 2)->read
+      (1, 3)->read
+
+->set_message_preview(100)
+  27:  OK
+  Users:
+      1->Marina
+  Groups:
+      1->fun
+  Registrations:
+      [1, Marina]->{1->fun}
+  All messages:
+      1->[sender: 1, group: 1, content: "qazxswedcvfrtgbnhyujmqazxswedcvfrtgbnhyujm"]
+      2->[sender: 1, group: 1, content: "abc"]
+      3->[sender: 1, group: 1, content: "asdasdasd"]
+  Message state:
+      (1, 1)->read
+      (1, 2)->read
+      (1, 3)->read
+

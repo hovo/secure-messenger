@@ -1,0 +1,102 @@
+  0:  OK
+
+->list_users
+  1:  OK
+  There are no users registered in the system yet.
+
+->list_users
+  2:  OK
+  There are no users registered in the system yet.
+
+->list_groups
+  3:  OK
+  There are no groups registered in the system yet.
+
+->add_user(1,"abc")
+  4:  OK
+  Users:
+      1->abc
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->add_user(2,"ab")
+  5:  OK
+  Users:
+      1->abc
+      2->ab
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->add_user(3,"a")
+  6:  OK
+  Users:
+      1->abc
+      2->ab
+      3->a
+  Groups:
+  Registrations:
+  All messages:
+  Message state:
+
+->add_user(1,"asdasd")
+  7:  ERROR 
+  ID already in use.
+
+->add_user(0,"sadasdas")
+  8:  ERROR 
+  ID must be a positive integer.
+
+->list_users
+  9:  OK
+  3->a
+  2->ab
+  1->abc
+
+->list_users
+  10:  OK
+  3->a
+  2->ab
+  1->abc
+
+->add_group(0,"asd")
+  11:  ERROR 
+  ID must be a positive integer.
+
+->add_group(1,"asd")
+  12:  OK
+  Users:
+      1->abc
+      2->ab
+      3->a
+  Groups:
+      1->asd
+  Registrations:
+  All messages:
+  Message state:
+
+->add_group(1,"asdas")
+  13:  ERROR 
+  ID already in use.
+
+->add_group(2,"asda")
+  14:  OK
+  Users:
+      1->abc
+      2->ab
+      3->a
+  Groups:
+      1->asd
+      2->asda
+  Registrations:
+  All messages:
+  Message state:
+
+->list_groups
+  15:  OK
+  1->asd
+  2->asda
+

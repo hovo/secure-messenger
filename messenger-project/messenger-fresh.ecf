@@ -41,7 +41,6 @@
 				<option void_safety="all" syntax="standard">
 				</option>
 				<cluster name="unit" location=".\unit\"/>
-				<cluster name="acceptance" location=".\acceptance\"/>
 			</cluster>
 		</cluster>
 		<cluster name="root" location=".\root\" recursive="true">

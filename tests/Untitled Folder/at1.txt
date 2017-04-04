@@ -1,0 +1,16 @@
+list_users
+list_users
+list_groups
+add_user(1, "abc")
+add_user(2, "ab")
+add_user(3, "a")
+add_user(1, "asdasd")
+add_user(0, "sadasdas")
+list_users
+list_users
+add_group(0,"asd")
+add_group(1,"asd")
+add_group(1,"asdas")
+add_group(2,"asda")
+list_groups
+
