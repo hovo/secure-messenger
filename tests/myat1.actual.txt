@@ -805,6 +805,7 @@
 
 ->read_message(1,3)
   54:  OK
+  Message for user [1, Dr. Dolittle]: [3, "Let's run the idea by our radiology team. They should be able to see right through it."]
   Users:
       1->Dr. Dolittle
       2->Dr. Frankenstein
@@ -889,6 +890,7 @@
 
 ->read_message(2,1)
   57:  OK
+  Message for user [2, Dr. Frankenstein]: [1, "Fellows, should we take this patient in? As a cardiologist, I don't have the heart to say no."]
   Users:
       1->Dr. Dolittle
       2->Dr. Frankenstein
@@ -973,6 +975,7 @@
 
 ->read_message(2,2)
   60:  OK
+  Message for user [2, Dr. Frankenstein]: [2, "Being a surgeon, I choose to wash my hands of the whole thing. "]
   Users:
       1->Dr. Dolittle
       2->Dr. Frankenstein

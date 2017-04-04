@@ -792,6 +792,7 @@
 
 ->read_message(1,3)
   52:  OK
+  Message for user [1, Dr. Dolittle]: [3, "Let's run the idea by our radiology team. They should be able to see right through it."]
   Users:
       1->Dr. Dolittle
       2->Dr. Frankenstein
@@ -863,6 +864,7 @@
 
 ->read_message(2,1)
   53:  OK
+  Message for user [2, Dr. Frankenstein]: [1, "Fellows, should we take this patient in? As a cardiologist, I don't have the heart to say no."]
   Users:
       1->Dr. Dolittle
       2->Dr. Frankenstein
@@ -934,6 +936,7 @@
 
 ->read_message(2,2)
   54:  OK
+  Message for user [2, Dr. Frankenstein]: [2, "Being a surgeon, I choose to wash my hands of the whole thing. "]
   Users:
       1->Dr. Dolittle
       2->Dr. Frankenstein
@@ -1015,19 +1018,85 @@
       3->[sender: 2, group: 1, content: "Let's run the i..."]
 
 ->delete_message(2,2)
-  57:  ERROR 
-  motherfucker
+  57:  OK
+  Users:
+      1->Dr. Dolittle
+      2->Dr. Frankenstein
+      3->Dr. Rieux
+      4->Dr. Higgins
+      5->Florence Nightingale
+      6->Mary Todd Lincoln
+      7->Helen Fairchild
+      8->Office assistant
+  Groups:
+      1->Doctors
+      2->Nurses
+      3->Staff
+  Registrations:
+      [1, Dr. Dolittle]->{1->Doctors}
+      [2, Dr. Frankenstein]->{1->Doctors, 3->Staff}
+      [3, Dr. Rieux]->{1->Doctors}
+      [4, Dr. Higgins]->{2->Nurses, 3->Staff}
+      [5, Florence Nightingale]->{2->Nurses, 3->Staff}
+      [7, Helen Fairchild]->{2->Nurses, 3->Staff}
+      [8, Office assistant]->{3->Staff}
+  All messages:
+      1->[sender: 1, group: 1, content: "Fellows, should..."]
+      2->[sender: 3, group: 1, content: "Being a surgeon..."]
+      3->[sender: 2, group: 1, content: "Let's run the i..."]
+      4->[sender: 8, group: 3, content: "Isn't it a bit ..."]
+      5->[sender: 4, group: 3, content: "Hey, I heard th..."]
+  Message state:
+      (1, 1)->read
+      (2, 1)->read
+      (3, 1)->unread
+      (4, 1)->unavailable
+      (5, 1)->unavailable
+      (6, 1)->unavailable
+      (7, 1)->unavailable
+      (8, 1)->unavailable
+      (1, 2)->unread
+      (2, 2)->unavailable
+      (3, 2)->read
+      (4, 2)->unavailable
+      (5, 2)->unavailable
+      (6, 2)->unavailable
+      (7, 2)->unavailable
+      (8, 2)->unavailable
+      (1, 3)->read
+      (2, 3)->read
+      (3, 3)->unread
+      (4, 3)->unavailable
+      (5, 3)->unavailable
+      (6, 3)->unavailable
+      (7, 3)->unavailable
+      (8, 3)->unavailable
+      (1, 4)->unavailable
+      (2, 4)->unread
+      (3, 4)->unavailable
+      (4, 4)->unread
+      (5, 4)->unread
+      (6, 4)->unavailable
+      (7, 4)->unread
+      (8, 4)->read
+      (1, 5)->unavailable
+      (2, 5)->unread
+      (3, 5)->unavailable
+      (4, 5)->read
+      (5, 5)->unread
+      (6, 5)->unavailable
+      (7, 5)->unread
+      (8, 5)->unread
 
 ->list_old_messages(2)
   58:  OK
   Old/read messages for user [2, Dr. Frankenstein]:
       1->[sender: 1, group: 1, content: "Fellows, should..."]
-      2->[sender: 3, group: 1, content: "Being a surgeon..."]
       3->[sender: 2, group: 1, content: "Let's run the i..."]
 
 ->delete_message(2,2)
   59:  ERROR 
-  motherfucker
+  Message with this ID not found in old/read messages.
 
 ->send_message(7,2,"As to diseases, make a habit of two things - to help, or at least, to do no harm.")
   60:  OK
@@ -1069,7 +1138,7 @@
       (7, 1)->unavailable
       (8, 1)->unavailable
       (1, 2)->unread
-      (2, 2)->read
+      (2, 2)->unavailable
       (3, 2)->read
       (4, 2)->unavailable
       (5, 2)->unavailable
@@ -1153,7 +1222,7 @@
       (7, 1)->unavailable
       (8, 1)->unavailable
       (1, 2)->unread
-      (2, 2)->read
+      (2, 2)->unavailable
       (3, 2)->read
       (4, 2)->unavailable
       (5, 2)->unavailable

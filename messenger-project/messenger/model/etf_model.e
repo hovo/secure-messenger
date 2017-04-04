@@ -192,6 +192,11 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 			Result := "list_old_messages"
 		end
 
+	command_type_read_message: STRING
+		attribute
+			Result := "read_message"
+		end
+
 	command_type_default: STRING
 		attribute
 			Result := "command"
@@ -202,6 +207,12 @@ feature
 		do
 			command_type := type
 		end
+
+	set_command_is_read
+		do
+			command_type := command_type_read_message
+		end
+
 	set_report (new_report: STRING)
 		do
 			report := new_report
@@ -239,19 +250,23 @@ feature -- queries
 
 			if count > 0 then
 				-- check command type
-				if command_type = command_type_default then -- handle commands
+				if command_type = command_type_default or command_type = command_type_read_message then -- handle commands
 					if status = error then
 						Result.append ("  " + report + "%N")
 					else
+						if command_type = command_type_read_message then
+							Result.append ("  " + report + "%N")
+						end
+
 						Result.append (
 						  "  Users:%N" + messenger.print_sorted_users +
-						  "  Groups:%N" + messenger.print_sorted_groups +
+					  	  "  Groups:%N" + messenger.print_sorted_groups +
 					  	  "  Registrations:%N" + messenger.list_registrations +
 					  	  "  All messages:%N" + messenger.list_all_messages +
 					      "  Message state:%N" + messenger.message_states)
-					      if not messenger.message_states.is_empty then
-							Result.append ("%N")
-					      end
+				    	if not messenger.message_states.is_empty then
+				    		Result.append ("%N")
+						end
 					end
 				else -- handle queries
 					Result.append ("  " + report + "%N")

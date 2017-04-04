@@ -18,6 +18,7 @@ feature -- command
 		local
     	do
 			model.reset
+			model.set_command_is_read
 			if uid <= 0 or mid <= 0 then
 				model.set_status (model.error)
 				model.set_report (model.err_non_positive_id)
@@ -38,7 +39,11 @@ feature -- command
 				model.set_report (model.err_message_unavailable)
 			else
 				model.messenger.read_message (uid, mid)
-				model.set_report ("test message")
+				model.set_report ("Message for user [" +
+								  model.messenger.user_at_uid (uid).uid.out + ", " +
+								  model.messenger.user_at_uid (uid).name + "]: [" +
+								  model.messenger.i_th_message(mid).mid.out + ", %"" +
+								  model.messenger.i_th_message(mid).content + "%"]")
 				model.set_status (model.success_ok)
 			end
 			model.update_count

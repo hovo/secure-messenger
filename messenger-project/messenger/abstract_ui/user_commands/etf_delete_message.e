@@ -31,7 +31,7 @@ feature -- command
 				model.set_report (model.err_message_not_found_in_new_old)
 			elseif model.messenger.user_at_uid (uid).new_messages.has (mid) then
 				model.set_status (model.error)
-				model.set_report ("motherfucker")
+				model.set_report (model.err_message_not_found_in_new_old)
 			else
 				model.messenger.delete_message (uid, mid)
 				model.set_status (model.success_ok)
