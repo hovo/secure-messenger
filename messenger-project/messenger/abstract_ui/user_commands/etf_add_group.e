@@ -18,6 +18,7 @@ feature -- command
 		local
 			group: GROUP
     	do
+    		model.reset
 			if gid <= 0 then
 				model.set_status (model.error)
 				model.set_report (model.err_non_positive_id)

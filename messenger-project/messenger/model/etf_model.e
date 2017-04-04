@@ -20,22 +20,23 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create s.make_empty
-			i := 0
 			create messenger.make
 			count := 0
-			report := success_ok
+			--report := success_ok
 			status := success_ok
-
+			command_type := command_type_default
 		end
 
 feature -- model attributes
-	s: STRING
-	i: INTEGER
 	count: INTEGER
 	messenger: MESSENGER
 
 feature {ETF_COMMAND} -- ERROR MESSAGES
+	command_type: STRING
+		attribute
+			create Result.make_empty
+		end
+
 	status: STRING
 		attribute
 			create Result.make_empty
@@ -171,8 +172,36 @@ feature {ETF_COMMAND} -- ERROR MESSAGES
 		end
 
 
+	command_type_list_users: STRING
+		attribute
+			Result := "list_users"
+		end
+
+	command_type_list_groups: STRING
+		attribute
+			Result := "list_groups"
+		end
+
+	command_type_list_new_messages: STRING
+		attribute
+			Result := "list_new_messages"
+		end
+
+	command_type_list_old_messages: STRING
+		attribute
+			Result := "list_old_messages"
+		end
+
+	command_type_default: STRING
+		attribute
+			Result := "command"
+		end
 
 feature
+	set_command_type (type: STRING)
+		do
+			command_type := type
+		end
 	set_report (new_report: STRING)
 		do
 			report := new_report
@@ -192,34 +221,40 @@ feature -- model operations
 	reset
 			-- Reset model state.
 		do
-			make
+			command_type := command_type_default
+		end
+
+	reset_report
+		do
+			report := ""
 		end
 
 feature -- queries
 	out : STRING
-		local
-			format: STRING
 		do
-
 			create Result.make_empty
-			format := "  " + count.out + ":" + status +  "%N"
-			if count > 0 and status /= error then
-				format := "  " + count.out + ":" + status +  "%N" +
+			Result := "  " + count.out + ":" + status +  "%N"
+			-- count keeps number of commands entered
+			-- when count is zero we only print the above output
+
+			if count > 0 then
+				-- check command type
+				if command_type = command_type_default then -- handle commands
+					if status = error then
+						Result.append ("  " + report + "%N")
+					else
+						Result.append (
 						  "  Users:%N" + messenger.print_sorted_users +
 						  "  Groups:%N" + messenger.print_sorted_groups +
 					  	  "  Registrations:%N" + messenger.list_registrations +
 					  	  "  All messages:%N" + messenger.list_all_messages +
-					      "  Message state:%N" + messenger.message_states
-			elseif status = error then
-				format.append ("  " + report + "%N")
+					      "  Message state:%N" + messenger.message_states)
+					end
+				else -- handle queries
+					Result.append ("  test" + report + "%N")
+				end
 			end
-			Result.append(format)
 
-
-			--Result.append ("System State: default model state ")
-			--Result.append ("(")
-			--Result.append (i.out)
-			--Result.append (")")
 		end
 
 end
