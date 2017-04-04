@@ -310,28 +310,30 @@ feature -- print Queries
 			create Result.make_empty
 			create groups_format.make_empty
 
-			from
-				users.start
-			until
-				users.after
-			loop
-				format := "      [" + users.item.uid.out + ", " + users.item.name + "]->{"
+			if not messages.is_empty then
 				from
-					users.item.registered_to.start
+					users.start
 				until
-					users.item.registered_to.after
+					users.after
 				loop
-					groups_format := i_th_group (users.item.registered_to.item).gid.out + "->" + i_th_group (users.item.registered_to.item).name
-					if not users.item.registered_to.islast then
-						groups_format.append (", ")
+					format := "      [" + users.item.uid.out + ", " + users.item.name + "]->{"
+					from
+						users.item.registered_to.start
+					until
+						users.item.registered_to.after
+					loop
+						groups_format := i_th_group (users.item.registered_to.item).gid.out + "->" + i_th_group (users.item.registered_to.item).name
+						if not users.item.registered_to.islast then
+							groups_format.append (", ")
+						end
+						format.append (groups_format)
+						users.item.registered_to.forth
 					end
-					format.append (groups_format)
-					users.item.registered_to.forth
-				end
-				format.append ("}")
-				Result.append (format + "%N")
+					format.append ("}")
+					Result.append (format + "%N")
 
-				users.forth
+					users.forth
+				end
 			end
 		end
 
