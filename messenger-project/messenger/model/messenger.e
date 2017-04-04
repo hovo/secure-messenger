@@ -318,30 +318,30 @@ feature -- print Queries
 			create Result.make_empty
 			create groups_format.make_empty
 
-			if registrations_exist then
+			from
+				users.start
+			until
+				users.after
+			loop
+				format := "      [" + users.item.uid.out + ", " + users.item.name + "]->{"
 				from
-					users.start
+					users.item.registered_to.start
 				until
-					users.after
+					users.item.registered_to.after
 				loop
-					format := "      [" + users.item.uid.out + ", " + users.item.name + "]->{"
-					from
-						users.item.registered_to.start
-					until
-						users.item.registered_to.after
-					loop
-						groups_format := i_th_group (users.item.registered_to.item).gid.out + "->" + i_th_group (users.item.registered_to.item).name
-						if not users.item.registered_to.islast then
-							groups_format.append (", ")
-						end
-						format.append (groups_format)
-						users.item.registered_to.forth
+					groups_format := i_th_group (users.item.registered_to.item).gid.out + "->" + i_th_group (users.item.registered_to.item).name
+					if not users.item.registered_to.islast then
+						groups_format.append (", ")
 					end
-					format.append ("}")
-					Result.append (format + "%N")
-
-					users.forth
+					format.append (groups_format)
+					users.item.registered_to.forth
 				end
+				format.append ("}")
+				if not users.item.registered_to.is_empty then
+					Result.append (format + "%N")
+				end
+
+				users.forth
 			end
 		end
 
@@ -430,20 +430,6 @@ feature -- print Queries
 		end
 
 feature -- Helper Queries
-	registrations_exist: BOOLEAN
-		do
-			from
-				users.start
-			until
-				users.after
-			loop
-				if not users.item.registered_to.is_empty then
-					Result := true
-				end
-				users.forth
-			end
-		end
-
 	sort_user_by_uid: SORTED_TWO_WAY_LIST[INTEGER_64]
 		-- Sort list by order of id
 		local
