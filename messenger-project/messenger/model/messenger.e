@@ -267,12 +267,16 @@ feature -- print Queries
 			format: STRING
 		do
 			create Result.make_empty
+			create format.make_empty
 			from
 				groups.start
 			until
 				groups.after
 			loop
-				format := groups.item.gid.out + "->" + groups.item.name
+				if not groups.isfirst then
+					format := "  "
+				end
+				format.append (groups.item.gid.out + "->" + groups.item.name)
 				Result.append (format)
 				if not groups.islast then
 					Result.append ("%N")
@@ -287,12 +291,16 @@ feature -- print Queries
 			format: STRING
 		do
 			create Result.make_empty
+			create format.make_empty
 			from
 				users.start
 			until
 				users.after
 			loop
-				format := users.item.uid.out + "->" + users.item.name
+				if not users.isfirst then
+					format := "  "
+				end
+				format.append (users.item.uid.out + "->" + users.item.name)
 				Result.append (format)
 				if not users.islast then
 					Result.append ("%N")
