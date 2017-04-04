@@ -207,6 +207,9 @@ feature -- print Queries
 		do
 			new_message_list := user_at_uid (uid).new_messages
 			create Result.make_empty
+			if not new_message_list.is_empty then
+				Result.append ("New/unread messages for user [" + user_at_uid (uid).uid.out + ", " + user_at_uid (uid).name + "]:%N")
+			end
 			from
 				new_message_list.start
 			until
@@ -220,7 +223,7 @@ feature -- print Queries
 					preview_text := message.content
 				end
 
-				format := message.mid.out + "->[sender: " + message.sender.out +
+				format := "      " + message.mid.out + "->[sender: " + message.sender.out +
 						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
 
 				Result.append (format)
@@ -244,6 +247,9 @@ feature -- print Queries
 		do
 			old_message_list := user_at_uid (uid).old_messages
 			create Result.make_empty
+			if not old_message_list.is_empty then
+				Result.append ("Old/read messages for user [" + user_at_uid (uid).uid.out + ", " + user_at_uid (uid).name + "]:%N")
+			end
 			from
 				old_message_list.start
 			until
@@ -257,7 +263,7 @@ feature -- print Queries
 					preview_text := message.content
 				end
 
-				format := message.mid.out + "->[sender: " + message.sender.out +
+				format := "      " + message.mid.out + "->[sender: " + message.sender.out +
 						  ", group: " + message.to_group.out + ", content: " + preview_text + "]"
 
 				Result.append (format)
