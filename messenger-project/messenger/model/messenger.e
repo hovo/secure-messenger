@@ -318,7 +318,7 @@ feature -- print Queries
 			create Result.make_empty
 			create groups_format.make_empty
 
-			if not messages.is_empty then
+			if registrations_exist then
 				from
 					users.start
 				until
@@ -430,6 +430,20 @@ feature -- print Queries
 		end
 
 feature -- Helper Queries
+	registrations_exist: BOOLEAN
+		do
+			from
+				users.start
+			until
+				users.after
+			loop
+				if not users.item.registered_to.is_empty then
+					Result := true
+				end
+				users.forth
+			end
+		end
+
 	sort_user_by_uid: SORTED_TWO_WAY_LIST[INTEGER_64]
 		-- Sort list by order of id
 		local
