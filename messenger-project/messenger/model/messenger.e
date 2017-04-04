@@ -139,15 +139,20 @@ feature -- Queries
 			positive_mid: mid > 0
 			user_exists: uid_exists (uid)
 			message_exists: mid_exists (mid)
-			new_old_exists: user_at_uid (uid).new_messages.has (mid) or user_at_uid (uid).old_messages.has (mid)
+			old_read_exists: user_at_uid (uid).old_messages.has (mid) or i_th_message (mid).read_by.has (uid)
 		local
-			sender: USER
+			user: USER
 			message: MESSAGE
 		do
-			sender := user_at_uid (uid)
-			message := i_th_message (mid)
-			sender.old_messages.search (message.mid)
-			sender.old_messages.remove
+			user := user_at_uid (uid) -- get user from uid
+			message := i_th_message (mid) -- get the message form mid
+
+			user.old_messages.search (message.mid) -- move cursor to where mid occurs
+			user.old_messages.remove -- remove mid from list
+
+			message.read_by.search (uid) -- move cursor to where uid occurs
+			message.read_by.remove	-- remove uid from read by list
+
 		end
 
 	set_message_preview (length: INTEGER_64)

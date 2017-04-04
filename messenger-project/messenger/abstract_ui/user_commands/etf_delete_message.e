@@ -26,10 +26,8 @@ feature -- command
 			elseif not model.messenger.mid_exists (mid) then
 				model.set_status (model.error)
 				model.set_report (model.err_message_dne)
-			elseif not model.messenger.user_at_uid (uid).old_messages.has (mid) then
-				model.set_status (model.error)
-				model.set_report (model.err_message_not_found_in_new_old)
-			elseif not model.messenger.user_at_uid (uid).new_messages.has (mid) then
+			elseif not model.messenger.user_at_uid (uid).old_messages.has (mid) or
+				   not model.messenger.i_th_message (mid).read_by.has (uid) then
 				model.set_status (model.error)
 				model.set_report (model.err_message_not_found_in_new_old)
 			else
